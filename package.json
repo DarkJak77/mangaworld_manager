@@ -1,0 +1,58 @@
+{
+  "name": "base_app",
+  "version": "1.0.0",
+  "author": "DarkJak77",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron-forge start",
+    "package 64 Bit": "electron-forge package",
+    "package 32 Bit": "electron-forge package --arch=ia32",
+    "make 64 Bit": "electron-forge make",
+    "make 32 Bit": "electron-forge make --arch=ia32"
+  },
+  "keywords": [],
+  "license": "ISC",
+  "devDependencies": {
+    "@electron-forge/cli": "^6.0.0-beta.54",
+    "@electron-forge/maker-deb": "^6.0.0-beta.54",
+    "@electron-forge/maker-rpm": "^6.0.0-beta.54",
+    "@electron-forge/maker-squirrel": "^6.0.0-beta.54",
+    "@electron-forge/maker-zip": "^6.0.0-beta.54",
+    "electron": "^12.0.2"
+  },
+  "dependencies": {
+    "electron-download-manager": "^2.1.2",
+    "electron-json-storage": "^4.4.0",
+    "electron-osx-prompt": "^1.4.1",
+    "electron-squirrel-startup": "^1.0.0",
+    "request": "^2.88.2"
+  },
+  "config": {
+    "forge": {
+      "packagerConfig": {},
+      "makers": [
+        {
+          "name": "@electron-forge/maker-squirrel",
+          "config": {
+            "name": "simple_telephone_book"
+          }
+        },
+        {
+          "name": "@electron-forge/maker-zip",
+          "platforms": [
+            "darwin"
+          ]
+        },
+        {
+          "name": "@electron-forge/maker-deb",
+          "config": {}
+        },
+        {
+          "name": "@electron-forge/maker-rpm",
+          "config": {}
+        }
+      ]
+    }
+  }
+}
