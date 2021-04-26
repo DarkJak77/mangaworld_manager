@@ -1,8 +1,8 @@
 {
-  "name": "base_app",
+  "name": "mangaworld_downloader",
   "version": "1.0.0",
   "author": "DarkJak77",
-  "description": "",
+  "description": "simple app to download manga to mangaworld.io",
   "main": "main.js",
   "scripts": {
     "start": "electron-forge start",
@@ -35,7 +35,7 @@
         {
           "name": "@electron-forge/maker-squirrel",
           "config": {
-            "name": "simple_telephone_book"
+            "name": "mangaworld_downloader"
           }
         },
         {

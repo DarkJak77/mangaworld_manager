@@ -3,6 +3,8 @@ const path = require('path')
 const fs = require('fs')
 const request = require('request')
 
+if (require('electron-squirrel-startup')) return app.quit();
+
 let info = {
   title: '',
   volume: '',
@@ -57,9 +59,9 @@ ipcMain.on('toMain', (event, ...args) => {
     let dir = ''
 
     if (info.volume != 'none') {
-      dir = 'download/' + info.title + '/' + info.volume + '/' + info.chapter + '/'
+      dir =  __dirname + '\\download\\' + info.title + '\\' + info.volume + '\\' + info.chapter + '\\'
     } else {
-      dir = 'download/' + info.title + '/' + info.chapter + '/'
+      dir = __dirname + '\\download\\' + info.title + '\\' + info.chapter + '\\'
     }
 
     try {
