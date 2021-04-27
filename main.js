@@ -12,6 +12,13 @@ let info = {
   pre_link: ''
 }
 
+let browser = {
+  'volume': '',
+  'chapter': ''
+}
+
+let to_do = []
+
 const download = (url, path, callback) => {
   request.head(url, (err, res, body) => {
     request(url)
@@ -20,7 +27,12 @@ const download = (url, path, callback) => {
   })
 }
 
+ipcMain.handle('add_list', async (event, ...args) => {
+  to_do.push(args[0])
+})
+
 // Is used to receive command from "master.js"
+//ipcMain.setMaxListeners(999)
 ipcMain.on('toMain', (event, ...args) => {
   let options = {
     type: 'info',
@@ -33,8 +45,30 @@ ipcMain.on('toMain', (event, ...args) => {
     options.message = 'Please insert a valid mangaworld link'
     dialog.showMessageBox(null, options)
 
-  } else if (args[0].includes('ok_*')) {
-    invisibleWindow(args[0].replace('ok_*', ''))
+  } else if (args[0] == 'start') {
+    if (browser.chapter == '') {
+      browser.chapter = new invisibleWindow_chapter(to_do[0])
+      browser.chapter
+    } else {
+      browser.chapter.goto(to_do[0])
+    }    
+    to_do.shift()
+  } else if (args[0].includes('chapter_*')) {
+    if (browser.chapter == '') {
+      browser.chapter = new invisibleWindow_chapter(args[0].replace('chapter_*', ''))
+      browser.chapter
+    } else {
+      browser.chapter.goto(args[0].replace('chapter_*', ''))
+    }
+
+  } else if (args[0].includes('volume_*')) {
+    if (browser.volume == '') {
+      browser.volume = new invisibleWindow_volume(args[0].replace('volume_*', ''))
+      browser.volume
+    } else {
+      browser.volume.goto(args[0].replace('volume_*', ''))
+    }
+    
 
   } else if (args[0].includes('master_*')) {
 
@@ -47,7 +81,8 @@ ipcMain.on('toMain', (event, ...args) => {
         .replaceAll('"', '')
         .replaceAll('<', '')
         .replaceAll('>', '')
-        .replaceAll('|', ''),
+        .replaceAll('|', '')
+        .trim(),
       volume: args[0].split('_*')[2],
       chapter: args[0].split('_*')[3],
       pre_link: args[0].split('_*')[4]
@@ -59,7 +94,7 @@ ipcMain.on('toMain', (event, ...args) => {
     let dir = ''
 
     if (info.volume != 'none') {
-      dir =  __dirname + '\\download\\' + info.title + '\\' + info.volume + '\\' + info.chapter + '\\'
+      dir = __dirname + '\\download\\' + info.title + '\\' + info.volume + '\\' + info.chapter + '\\'
     } else {
       dir = __dirname + '\\download\\' + info.title + '\\' + info.chapter + '\\'
     }
@@ -80,84 +115,99 @@ ipcMain.on('toMain', (event, ...args) => {
 
 function createWindow() {
   const win = new BrowserWindow({
-    width: 557,
-    height: 147,
+    width: 704,
+    height: 528,
     resizable: false,
     maximizable: false,
-
     /*
-    resizable: false,
-    fullscreenable: false,
     icon: __dirname + "\\src\\ico\\police.ico",
     */
-
     webPreferences: {
       preload: path.join(__dirname, 'preload.js')
     }
-
-    /*
-  if (dev == 1) {
-    option.resizable = true
-    option.fullscreenable = true
-  } else {
-  }
-  */
-
   })
-
-  /*
-  if (dev == 1) {
-    win.webContents.openDevTools();
-  }
-  */
   //win.webContents.openDevTools()
-
   // Disable the Menu
   win.setMenu(null)
-
 
   win.loadFile(__dirname + '\\src\\web\\home.html')
 }
 
-function invisibleWindow(link) {
-  const win = new BrowserWindow({
-    width: 800,
-    height: 600,
-    maximizable: true,
-    show:false,
 
-    webPreferences: {
-      preload: path.join(__dirname, 'preload_chapter.js')
+
+class invisibleWindow_chapter {
+
+  constructor(link) {
+    this.win = new BrowserWindow({
+      width: 800,
+      height: 600,
+      maximizable: true,
+      //show: false,
+  
+      webPreferences: {
+        preload: path.join(__dirname, 'preload_chapter.js')
+      }
+    })
+  
+    if (link.includes('?style=list')) {
+      this.win.loadURL(link)
+    } else {
+      this.win.loadURL(link + '?style=list')
     }
+  
+    ipcMain.on('toMain', (event, ...args) => {
+      if (args[0] == 'quit') {
+  
+        info = {
+          title: '',
+          volume: '',
+          chapter: '',
+          pre_link: ''
+        }
+  
+        if (to_do.length != 0) {
+          if (to_do[0].includes('?style=list')) {
+            this.win.loadURL(to_do[0])
+          } else {
+            this.win.loadURL(to_do[0] + '?style=list')
+          }
+          to_do.shift()
+        } else if (to_do.length == 0) {
+          dialog.showMessageBox(null, { type: 'info', title: 'mangaworld downloader', message: 'Download Complete!' })
+        }
+      }
+    })
+  } 
 
-  })
+  goto(link) {
+    this.win.loadURL(link)
+  }
+}
 
-  //win.webContents.openDevTools()
+class invisibleWindow_volume {
 
-  if (link.includes('?style=list')) {
-    win.loadURL(link)
-  } else {
-    win.loadURL(link + '?style=list')
+  constructor(link) {
+    this.win = new BrowserWindow({
+        width: 800,
+        height: 600,
+        maximizable: true,
+        //show: false,
+
+        webPreferences: {
+          preload: path.join(__dirname, 'preload_volume.js')
+        }
+      })
+
+      this.win.loadURL(link)
+  }
+  
+  goto(link) {
+    this.win.loadURL(link)
   }
 
-  ipcMain.on('toMain', (event, ...args) => {
-    if (args[0] == 'quit') {
-  
-      info = {
-        title: '',
-        volume: '',
-        chapter: '',
-        pre_link: ''
-      }
-      
-
-      dialog.showMessageBox(null, option = {type: 'info',title: 'mangaworld downloader',message: 'Download Complete!'})
-
-      win.close()
-    }
-  })
-
 }
+
+
 
 app.whenReady().then(() => {
   createWindow()
