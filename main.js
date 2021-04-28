@@ -2,22 +2,11 @@ const { app, BrowserWindow, ipcMain, dialog } = require('electron')
 const path = require('path')
 const fs = require('fs')
 const request = require('request')
+const storage = require('./src/js/store.js')
 
 if (require('electron-squirrel-startup')) return app.quit();
 
-let info = {
-  title: '',
-  volume: '',
-  chapter: '',
-  pre_link: ''
-}
-
-let browser = {
-  'volume': '',
-  'chapter': ''
-}
-
-let to_do = []
+let store = new storage()
 
 const download = (url, path, callback) => {
   request.head(url, (err, res, body) => {
@@ -28,7 +17,7 @@ const download = (url, path, callback) => {
 }
 
 ipcMain.handle('add_list', async (event, ...args) => {
-  to_do.push(args[0])
+  store.store.to_do.push(args[0])
 })
 
 // Is used to receive command from "master.js"
@@ -46,33 +35,33 @@ ipcMain.on('toMain', (event, ...args) => {
     dialog.showMessageBox(null, options)
 
   } else if (args[0] == 'start') {
-    if (browser.chapter == '') {
-      browser.chapter = new invisibleWindow_chapter(to_do[0])
-      browser.chapter
+    if (store.browser.chapter == '') {
+      store.browser.chapter = new invisibleWindow_chapter(store.to_do[0])
+      store.browser.chapter
     } else {
-      browser.chapter.goto(to_do[0])
+      store.browser.chapter.goto(store.to_do[0])
     }    
-    to_do.shift()
+    store.to_do.shift()
   } else if (args[0].includes('chapter_*')) {
-    if (browser.chapter == '') {
-      browser.chapter = new invisibleWindow_chapter(args[0].replace('chapter_*', ''))
-      browser.chapter
+    if (store.browser.chapter == '') {
+      store.browser.chapter = new invisibleWindow_chapter(args[0].replace('chapter_*', ''))
+      store.browser.chapter
     } else {
-      browser.chapter.goto(args[0].replace('chapter_*', ''))
+      store.browser.chapter.goto(args[0].replace('chapter_*', ''))
     }
 
   } else if (args[0].includes('volume_*')) {
-    if (browser.volume == '') {
-      browser.volume = new invisibleWindow_volume(args[0].replace('volume_*', ''))
-      browser.volume
+    if (store.browser.volume == '') {
+      store.browser.volume = new invisibleWindow_volume(args[0].replace('volume_*', ''))
+      store.browser.volume
     } else {
-      browser.volume.goto(args[0].replace('volume_*', ''))
+      store.browser.volume.goto(args[0].replace('volume_*', ''))
     }
     
 
   } else if (args[0].includes('master_*')) {
 
-    info = {
+    store.info = {
       title: args[0].split('_*')[1].replaceAll('?', '')
         .replaceAll('\\', '')
         .replaceAll('/', '')
@@ -93,10 +82,10 @@ ipcMain.on('toMain', (event, ...args) => {
     let value = args[0].split('_*')
     let dir = ''
 
-    if (info.volume != 'none') {
-      dir = __dirname + '\\download\\' + info.title + '\\' + info.volume + '\\' + info.chapter + '\\'
+    if (store.info.volume != 'none') {
+      dir = __dirname + '\\download\\' + store.info.title + '\\' + store.info.volume + '\\' + store.info.chapter + '\\'
     } else {
-      dir = __dirname + '\\download\\' + info.title + '\\' + info.chapter + '\\'
+      dir = __dirname + '\\download\\' + store.info.title + '\\' + store.info.chapter + '\\'
     }
 
     try {
@@ -106,7 +95,7 @@ ipcMain.on('toMain', (event, ...args) => {
 
     let path = dir + value[1]
 
-    const url = info.pre_link + value[1]
+    const url = store.info.pre_link + value[1]
     download(url, path, () => {
     })
 
@@ -158,21 +147,21 @@ class invisibleWindow_chapter {
     ipcMain.on('toMain', (event, ...args) => {
       if (args[0] == 'quit') {
   
-        info = {
+        store.info = {
           title: '',
           volume: '',
           chapter: '',
           pre_link: ''
         }
   
-        if (to_do.length != 0) {
-          if (to_do[0].includes('?style=list')) {
-            this.win.loadURL(to_do[0])
+        if (store.to_do.length != 0) {
+          if (store.to_do[0].includes('?style=list')) {
+            this.win.loadURL(store.to_do[0])
           } else {
-            this.win.loadURL(to_do[0] + '?style=list')
+            this.win.loadURL(store.to_do[0] + '?style=list')
           }
-          to_do.shift()
-        } else if (to_do.length == 0) {
+          store.to_do.shift()
+        } else if (store.to_do.length == 0) {
           dialog.showMessageBox(null, { type: 'info', title: 'mangaworld downloader', message: 'Download Complete!' })
         }
       }
