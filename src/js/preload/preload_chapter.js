@@ -36,7 +36,6 @@ window.addEventListener('DOMContentLoaded', () => {
 
   for (page = 0; page < link.length; page++) {
     let end = link[page].src.split('/')[link[page].src.split('/').length -1]
-    console.log(end)
     ipcRenderer.send('toMain', 'dl_*' + end);
   }
 

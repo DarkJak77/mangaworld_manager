@@ -12,9 +12,11 @@ contextBridge.exposeInMainWorld(
   },
 
   check: () => {
-    let values = document.getElementsByClassName('hoverBordera85828e0')[0].value
-    if (values.includes('https://www.mangaworld.io/manga/')){
-      return 'ok_*'+values
+    let values = document.getElementsByClassName('hoverBorder631050db')[0].value
+    if (values.includes('https://www.mangaworld.io/manga/') && values.includes('/read/')) {
+      return 'chapter_*' + values
+    } else if (values.includes('https://www.mangaworld.io/manga/')) {
+      return 'volume_*' + values
     } else {
       return 'error'
     }

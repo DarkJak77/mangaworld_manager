@@ -12,11 +12,9 @@
         height: 100%;
         width: 100%;
         -webkit-font-smoothing: antialiased;
-        overflow: -moz-scrollbars-none;
-        -ms-overflow-style: none;
+        overflow: -moz-hidden-unscrollable;
+        overflow: hidden;
       }
-
-      
 
       .home {
 
@@ -39,17 +37,17 @@
       padding-right: 0.00px;
       padding-bottom: 0.00px;
       padding-left: 0.00px;
-      overflow-x: auto;
-      overflow-y: auto;
+      overflow-x: hidden;
+      overflow-y: hidden;
       background-color: rgba(255, 255, 255, 1);
-      width: 553.00px;
-    height: 117.00px;
+      width: 700.00px;
+    height: 500.00px;
     left: 0px;
     top: 0px;
 
 }
 
-.home .basicInputButtonsHyperlinksAccentButtonHover5e0299ce {
+.home .basicInputButtonsHyperlinksAccentButtonHoverc4795ade {
 
       display: block;
       position: absolute;
@@ -73,14 +71,14 @@
       overflow-x: unset;
       overflow-y: unset;
       background-color: transparent;
-      width: 345.40px;
+      width: 446.00px;
     height: 32.00px;
-    left: 13.00px;
-    top: 20.00px;
+    left: 30.00px;
+    top: 30.00px;
 
 }
 
-.home .basicInputButtonsHyperlinksAccentButtonHover5e0299ce .buttonBase9fec3df3 {
+.home .basicInputButtonsHyperlinksAccentButtonHoverc4795ade .buttonBaseee12a911 {
     position: absolute;
       box-sizing: content-box;
       -ms-transform: rotate(0.00deg);
@@ -104,7 +102,7 @@
           stroke-width: 1.00px;
           stroke-linecap: butt;
       box-shadow: none;
-      width: 122.00px;
+      width: 222.40px;
     height: auto;
     left: -1.00px;
     top: -1.00px;
@@ -112,7 +110,7 @@
 
 }
 
-.home .basicInputButtonsHyperlinksAccentButtonHover5e0299ce .hoverBordera85828e0 {
+.home .basicInputButtonsHyperlinksAccentButtonHoverc4795ade .hoverBorder631050db {
     position: absolute;
       box-sizing: border-box;
       -ms-transform: rotate(0.00deg);
@@ -136,11 +134,10 @@
           stroke-width: 2.00px;
           stroke-linecap: butt;
       box-shadow: none;
-      width: 300.00px;
+      width: 445.80px;
     height: auto;
     left: 0.00px;
     top: 0.00px;
-    right: 0.00px;
     bottom: 0.00px;
 
 }
@@ -169,10 +166,11 @@
       overflow-x: unset;
       overflow-y: unset;
       background-color: transparent;
-      width: 544.60px;
-    height: 32.00px;
-    left: 0.40px;
-    top: 76.00px;
+      width: auto;
+    height: 63.00px;
+    left: 0.00px;
+    right: 0.00px;
+    bottom: 0.00px;
 
 }
 
@@ -204,7 +202,7 @@
     height: auto;
     left: 0.00px;
     top: 0.00px;
-    right: -0.00px;
+    right: 0.00px;
     bottom: 0.00px;
 
 }
@@ -263,11 +261,11 @@
       padding-left: 0.00px;
       background-color: rgba(255, 255, 255, 0);
       text-align: left;
-      line-height: 20.00px;
+      line-height: 36.00px;
       letter-spacing: 0.00px;
       color: rgba(0, 0, 0, 0.4);
-      -webkit-text-stroke: 1.00px rgba(0, 0, 0, 0);
-      font-size: 14.00px;
+      -webkit-text-stroke: unset;
+      font-size: 25.00px;
       font-weight: 400;
     font-style: normal;
       font-family: 'Segoe UI', Arial;
@@ -276,14 +274,14 @@
       overflow-x: unset;
       overflow-y: unset;
       white-space: pre;
-      width: 82.00px;
-    height: 19.00px;
-    left: 450.00px;
-    top: 5.50px;
+      width: 146.00px;
+    height: 33.00px;
+    right: 40.00px;
+    bottom: 21.50px;
 
 }
 
-.home .textTextBoxNoHeaderDisabled .hintText942f18fb {
+.home .textTextBoxNoHeaderDisabled .hintTextdbda5782 {
     position: absolute;
       box-sizing: content-box;
       -ms-transform: rotate(0.00deg);
@@ -304,11 +302,11 @@
       padding-left: 0.00px;
       background-color: rgba(255, 255, 255, 0);
       text-align: left;
-      line-height: 20.00px;
+      line-height: 36.00px;
       letter-spacing: 0.00px;
       color: rgba(0, 0, 0, 0.4);
-      -webkit-text-stroke: 1.00px rgba(0, 0, 0, 0);
-      font-size: 14.00px;
+      -webkit-text-stroke: unset;
+      font-size: 25.00px;
       font-weight: 400;
     font-style: normal;
       font-family: 'Segoe UI', Arial;
@@ -317,14 +315,14 @@
       overflow-x: unset;
       overflow-y: unset;
       white-space: pre;
-      width: 82.00px;
-    height: 19.00px;
-    left: 450.00px;
-    top: 5.50px;
+      width: 146.00px;
+    height: 33.00px;
+    right: 40.00px;
+    bottom: 21.50px;
 
 }
 
-.home .textTextBoxNoHeaderDisabled .hintText3e1951c6 {
+.home .textTextBoxNoHeaderDisabled .hintTextb06f8ab3 {
     position: absolute;
       box-sizing: content-box;
       -ms-transform: rotate(0.00deg);
@@ -345,11 +343,11 @@
       padding-left: 0.00px;
       background-color: rgba(255, 255, 255, 0);
       text-align: left;
-      line-height: 20.00px;
+      line-height: 36.00px;
       letter-spacing: 0.00px;
       color: rgba(0, 0, 0, 0.4);
-      -webkit-text-stroke: 1.00px rgba(0, 0, 0, 0);
-      font-size: 14.00px;
+      -webkit-text-stroke: unset;
+      font-size: 25.00px;
       font-weight: 400;
     font-style: normal;
       font-family: 'Segoe UI', Arial;
@@ -358,10 +356,10 @@
       overflow-x: unset;
       overflow-y: unset;
       white-space: pre;
-      width: 82.00px;
-    height: 19.00px;
-    left: 450.00px;
-    top: 5.50px;
+      width: 146.00px;
+    height: 33.00px;
+    right: 40.00px;
+    bottom: 21.50px;
 
 }
 
@@ -389,10 +387,10 @@
       overflow-x: unset;
       overflow-y: unset;
       background-color: transparent;
-      width: 120.00px;
+      width: 164.20px;
     height: 32.00px;
-    left: 413.00px;
-    top: 20.00px;
+    left: 505.80px;
+    top: 30.00px;
 
 }
 
@@ -457,7 +455,7 @@
     height: auto;
     left: 0.00px;
     top: 0.00px;
-    right: 0.00px;
+    right: -0.00px;
     bottom: 0.00px;
 
 }
@@ -498,8 +496,564 @@
       white-space: pre;
       width: 64.00px;
     height: 19.00px;
-    left: 28.00px;
-    top: 5.50px;
+    left: 50.00px;
+    top: 6.50px;
 
 }
 
+.home .basicInputButtonsHyperlinksAccentButtonHoverf3ada973 {
+
+      display: block;
+      position: absolute;
+      box-sizing: content-box;
+      -ms-transform: rotate(0.00deg);
+    -webkit-transform: rotate(0.00deg);
+    transform: rotate(0.00deg);
+    -ms-transform-origin: center;
+    -webkit-transform-origin: center;
+    transform-origin: center;
+      opacity: 1;
+      cursor: default;
+      margin-top: 0.00px;
+      margin-right: 0.00px;
+      margin-bottom: 0.00px;
+      margin-left: 0.00px;
+      padding-top: 0.00px;
+      padding-right: 0.00px;
+      padding-bottom: 0.00px;
+      padding-left: 0.00px;
+      overflow-x: unset;
+      overflow-y: unset;
+      background-color: transparent;
+      width: 164.20px;
+    height: 32.00px;
+    left: 505.80px;
+    top: 145.00px;
+
+}
+
+.home .basicInputButtonsHyperlinksAccentButtonHoverf3ada973 .buttonBase1200bf9c {
+    position: absolute;
+      box-sizing: content-box;
+      -ms-transform: rotate(0.00deg);
+    -webkit-transform: rotate(0.00deg);
+    transform: rotate(0.00deg);
+    -ms-transform-origin: center;
+    -webkit-transform-origin: center;
+    transform-origin: center;
+      opacity: 1;
+      cursor: default;
+      margin-top: 0.00px;
+      margin-right: 0.00px;
+      margin-bottom: 0.00px;
+      margin-left: 0.00px;
+      padding-top: 0.00px;
+      padding-right: 0.00px;
+      padding-bottom: 0.00px;
+      padding-left: 0.00px;
+      fill: rgba(0, 120, 215, 1);
+      stroke: rgba(0, 0, 0, 0);
+          stroke-width: 1.00px;
+          stroke-linecap: butt;
+      box-shadow: none;
+      width: auto;
+    height: auto;
+    left: -1.00px;
+    top: -1.00px;
+    right: -1.00px;
+    bottom: -1.00px;
+
+}
+
+.home .basicInputButtonsHyperlinksAccentButtonHoverf3ada973 .hoverBorder924a67aa {
+    position: absolute;
+      box-sizing: border-box;
+      -ms-transform: rotate(0.00deg);
+    -webkit-transform: rotate(0.00deg);
+    transform: rotate(0.00deg);
+    -ms-transform-origin: center;
+    -webkit-transform-origin: center;
+    transform-origin: center;
+      opacity: 1;
+      cursor: default;
+      margin-top: 0.00px;
+      margin-right: 0.00px;
+      margin-bottom: 0.00px;
+      margin-left: 0.00px;
+      padding-top: 0.00px;
+      padding-right: 0.00px;
+      padding-bottom: 0.00px;
+      padding-left: 0.00px;
+      fill: transparent;
+      stroke: rgba(0, 0, 0, 0.4);
+          stroke-width: 2.00px;
+          stroke-linecap: butt;
+      box-shadow: none;
+      width: auto;
+    height: auto;
+    left: 0.00px;
+    top: 0.00px;
+    right: -0.00px;
+    bottom: 0.00px;
+
+}
+
+.home .basicInputButtonsHyperlinksAccentButtonHoverf3ada973 .buttonLabel4fefec2f {
+    position: absolute;
+      box-sizing: content-box;
+      -ms-transform: rotate(0.00deg);
+    -webkit-transform: rotate(0.00deg);
+    transform: rotate(0.00deg);
+    -ms-transform-origin: center;
+    -webkit-transform-origin: center;
+    transform-origin: center;
+      opacity: 1;
+      cursor: default;
+      margin-top: 0.00px;
+      margin-right: 0.00px;
+      margin-bottom: 0.00px;
+      margin-left: 0.00px;
+      padding-top: 0.00px;
+      padding-right: 0.00px;
+      padding-bottom: 0.00px;
+      padding-left: 0.00px;
+      background-color: rgba(255, 255, 255, 0);
+      text-align: center;
+      line-height: 20.00px;
+      letter-spacing: 0.00px;
+      color: rgba(255, 255, 255, 1);
+      -webkit-text-stroke: 1.00px rgba(0, 0, 0, 0);
+      font-size: 14.00px;
+      font-weight: 400;
+    font-style: normal;
+      font-family: 'Segoe UI', Arial;
+      text-decoration: none;
+      box-shadow: none;
+      overflow-x: unset;
+      overflow-y: unset;
+      white-space: pre;
+      width: 96.00px;
+    height: 19.00px;
+    left: 38.00px;
+    top: 6.50px;
+
+}
+
+.home .basicInputButtonsHyperlinksAccentButtonHover7c2a7e63 {
+
+      display: block;
+      position: absolute;
+      box-sizing: content-box;
+      -ms-transform: rotate(0.00deg);
+    -webkit-transform: rotate(0.00deg);
+    transform: rotate(0.00deg);
+    -ms-transform-origin: center;
+    -webkit-transform-origin: center;
+    transform-origin: center;
+      opacity: 1;
+      cursor: default;
+      margin-top: 0.00px;
+      margin-right: 0.00px;
+      margin-bottom: 0.00px;
+      margin-left: 0.00px;
+      padding-top: 0.00px;
+      padding-right: 0.00px;
+      padding-bottom: 0.00px;
+      padding-left: 0.00px;
+      overflow-x: unset;
+      overflow-y: unset;
+      background-color: transparent;
+      width: 164.20px;
+    height: 32.00px;
+    left: 505.80px;
+    top: 260.00px;
+
+}
+
+.home .basicInputButtonsHyperlinksAccentButtonHover7c2a7e63 .buttonBase1a0b0fca {
+    position: absolute;
+      box-sizing: content-box;
+      -ms-transform: rotate(0.00deg);
+    -webkit-transform: rotate(0.00deg);
+    transform: rotate(0.00deg);
+    -ms-transform-origin: center;
+    -webkit-transform-origin: center;
+    transform-origin: center;
+      opacity: 1;
+      cursor: default;
+      margin-top: 0.00px;
+      margin-right: 0.00px;
+      margin-bottom: 0.00px;
+      margin-left: 0.00px;
+      padding-top: 0.00px;
+      padding-right: 0.00px;
+      padding-bottom: 0.00px;
+      padding-left: 0.00px;
+      fill: rgba(0, 120, 215, 1);
+      stroke: rgba(0, 0, 0, 0);
+          stroke-width: 1.00px;
+          stroke-linecap: butt;
+      box-shadow: none;
+      width: auto;
+    height: auto;
+    left: -1.00px;
+    top: -1.00px;
+    right: -1.00px;
+    bottom: -1.00px;
+
+}
+
+.home .basicInputButtonsHyperlinksAccentButtonHover7c2a7e63 .hoverBorder30b257de {
+    position: absolute;
+      box-sizing: border-box;
+      -ms-transform: rotate(0.00deg);
+    -webkit-transform: rotate(0.00deg);
+    transform: rotate(0.00deg);
+    -ms-transform-origin: center;
+    -webkit-transform-origin: center;
+    transform-origin: center;
+      opacity: 1;
+      cursor: default;
+      margin-top: 0.00px;
+      margin-right: 0.00px;
+      margin-bottom: 0.00px;
+      margin-left: 0.00px;
+      padding-top: 0.00px;
+      padding-right: 0.00px;
+      padding-bottom: 0.00px;
+      padding-left: 0.00px;
+      fill: transparent;
+      stroke: rgba(0, 0, 0, 0.4);
+          stroke-width: 2.00px;
+          stroke-linecap: butt;
+      box-shadow: none;
+      width: auto;
+    height: auto;
+    left: 0.00px;
+    top: 0.00px;
+    right: -0.00px;
+    bottom: 0.00px;
+
+}
+
+.home .basicInputButtonsHyperlinksAccentButtonHover7c2a7e63 .buttonLabele4680707 {
+    position: absolute;
+      box-sizing: content-box;
+      -ms-transform: rotate(0.00deg);
+    -webkit-transform: rotate(0.00deg);
+    transform: rotate(0.00deg);
+    -ms-transform-origin: center;
+    -webkit-transform-origin: center;
+    transform-origin: center;
+      opacity: 1;
+      cursor: default;
+      margin-top: 0.00px;
+      margin-right: 0.00px;
+      margin-bottom: 0.00px;
+      margin-left: 0.00px;
+      padding-top: 0.00px;
+      padding-right: 0.00px;
+      padding-bottom: 0.00px;
+      padding-left: 0.00px;
+      background-color: rgba(255, 255, 255, 0);
+      text-align: center;
+      line-height: 20.00px;
+      letter-spacing: 0.00px;
+      color: rgba(255, 255, 255, 1);
+      -webkit-text-stroke: 1.00px rgba(0, 0, 0, 0);
+      font-size: 14.00px;
+      font-weight: 400;
+    font-style: normal;
+      font-family: 'Segoe UI', Arial;
+      text-decoration: none;
+      box-shadow: none;
+      overflow-x: unset;
+      overflow-y: unset;
+      white-space: pre;
+      width: 86.00px;
+    height: 19.00px;
+    left: 37.00px;
+    top: 6.50px;
+
+}
+
+.home .basicInputButtonsHyperlinksAccentButtonHoverd6cf4591 {
+
+      display: block;
+      position: absolute;
+      box-sizing: content-box;
+      -ms-transform: rotate(0.00deg);
+    -webkit-transform: rotate(0.00deg);
+    transform: rotate(0.00deg);
+    -ms-transform-origin: center;
+    -webkit-transform-origin: center;
+    transform-origin: center;
+      opacity: 1;
+      cursor: default;
+      margin-top: 0.00px;
+      margin-right: 0.00px;
+      margin-bottom: 0.00px;
+      margin-left: 0.00px;
+      padding-top: 0.00px;
+      padding-right: 0.00px;
+      padding-bottom: 0.00px;
+      padding-left: 0.00px;
+      overflow-x: unset;
+      overflow-y: unset;
+      background-color: transparent;
+      width: 164.20px;
+    height: 32.00px;
+    left: 505.80px;
+    top: 375.00px;
+
+}
+
+.home .basicInputButtonsHyperlinksAccentButtonHoverd6cf4591 .buttonBaseeb546a24 {
+    position: absolute;
+      box-sizing: content-box;
+      -ms-transform: rotate(0.00deg);
+    -webkit-transform: rotate(0.00deg);
+    transform: rotate(0.00deg);
+    -ms-transform-origin: center;
+    -webkit-transform-origin: center;
+    transform-origin: center;
+      opacity: 1;
+      cursor: default;
+      margin-top: 0.00px;
+      margin-right: 0.00px;
+      margin-bottom: 0.00px;
+      margin-left: 0.00px;
+      padding-top: 0.00px;
+      padding-right: 0.00px;
+      padding-bottom: 0.00px;
+      padding-left: 0.00px;
+      fill: rgba(0, 120, 215, 1);
+      stroke: rgba(0, 0, 0, 0);
+          stroke-width: 1.00px;
+          stroke-linecap: butt;
+      box-shadow: none;
+      width: auto;
+    height: auto;
+    left: -1.00px;
+    top: -1.00px;
+    right: -1.00px;
+    bottom: -1.00px;
+
+}
+
+.home .basicInputButtonsHyperlinksAccentButtonHoverd6cf4591 .hoverBorder4ec55262 {
+    position: absolute;
+      box-sizing: border-box;
+      -ms-transform: rotate(0.00deg);
+    -webkit-transform: rotate(0.00deg);
+    transform: rotate(0.00deg);
+    -ms-transform-origin: center;
+    -webkit-transform-origin: center;
+    transform-origin: center;
+      opacity: 1;
+      cursor: default;
+      margin-top: 0.00px;
+      margin-right: 0.00px;
+      margin-bottom: 0.00px;
+      margin-left: 0.00px;
+      padding-top: 0.00px;
+      padding-right: 0.00px;
+      padding-bottom: 0.00px;
+      padding-left: 0.00px;
+      fill: transparent;
+      stroke: rgba(0, 0, 0, 0.4);
+          stroke-width: 2.00px;
+          stroke-linecap: butt;
+      box-shadow: none;
+      width: auto;
+    height: auto;
+    left: 0.00px;
+    top: 0.00px;
+    right: -0.00px;
+    bottom: 0.00px;
+
+}
+
+.home .basicInputButtonsHyperlinksAccentButtonHoverd6cf4591 .buttonLabel48acd5d3 {
+    position: absolute;
+      box-sizing: content-box;
+      -ms-transform: rotate(0.00deg);
+    -webkit-transform: rotate(0.00deg);
+    transform: rotate(0.00deg);
+    -ms-transform-origin: center;
+    -webkit-transform-origin: center;
+    transform-origin: center;
+      opacity: 1;
+      cursor: default;
+      margin-top: 0.00px;
+      margin-right: 0.00px;
+      margin-bottom: 0.00px;
+      margin-left: 0.00px;
+      padding-top: 0.00px;
+      padding-right: 0.00px;
+      padding-bottom: 0.00px;
+      padding-left: 0.00px;
+      background-color: rgba(255, 255, 255, 0);
+      text-align: center;
+      line-height: 20.00px;
+      letter-spacing: 0.00px;
+      color: rgba(255, 255, 255, 1);
+      -webkit-text-stroke: 1.00px rgba(0, 0, 0, 0);
+      font-size: 14.00px;
+      font-weight: 400;
+    font-style: normal;
+      font-family: 'Segoe UI', Arial;
+      text-decoration: none;
+      box-shadow: none;
+      overflow-x: unset;
+      overflow-y: unset;
+      white-space: pre;
+      width: 116.00px;
+    height: 19.00px;
+    left: 22.00px;
+    top: 6.50px;
+
+}
+
+.home .basicInputButtonsHyperlinksAccentButtonHover7035264c {
+
+      display: block;
+      position: absolute;
+      box-sizing: content-box;
+      -ms-transform: rotate(0.00deg);
+    -webkit-transform: rotate(0.00deg);
+    transform: rotate(0.00deg);
+    -ms-transform-origin: center;
+    -webkit-transform-origin: center;
+    transform-origin: center;
+      opacity: 1;
+      cursor: default;
+      margin-top: 0.00px;
+      margin-right: 0.00px;
+      margin-bottom: 0.00px;
+      margin-left: 0.00px;
+      padding-top: 0.00px;
+      padding-right: 0.00px;
+      padding-bottom: 0.00px;
+      padding-left: 0.00px;
+      overflow-x: unset;
+      overflow-y: unset;
+      background-color: transparent;
+      width: 446.00px;
+    height: 292.00px;
+    left: 30.00px;
+    top: 115.00px;
+
+}
+
+.home .basicInputButtonsHyperlinksAccentButtonHover7035264c .buttonBase262893cb {
+    position: absolute;
+      box-sizing: content-box;
+      -ms-transform: rotate(0.00deg);
+    -webkit-transform: rotate(0.00deg);
+    transform: rotate(0.00deg);
+    -ms-transform-origin: center;
+    -webkit-transform-origin: center;
+    transform-origin: center;
+      opacity: 1;
+      cursor: default;
+      margin-top: 0.00px;
+      margin-right: 0.00px;
+      margin-bottom: 0.00px;
+      margin-left: 0.00px;
+      padding-top: 0.00px;
+      padding-right: 0.00px;
+      padding-bottom: 0.00px;
+      padding-left: 0.00px;
+      fill: rgba(255, 255, 255, 1);
+      stroke: rgba(0, 0, 0, 0);
+          stroke-width: 1.00px;
+          stroke-linecap: butt;
+      box-shadow: none;
+      width: 222.40px;
+    height: auto;
+    left: -1.00px;
+    top: -1.00px;
+    bottom: -1.00px;
+
+}
+
+.home .basicInputButtonsHyperlinksAccentButtonHover7035264c .hoverBorder0d9a5924 {
+    position: absolute;
+      box-sizing: border-box;
+      -ms-transform: rotate(0.00deg);
+    -webkit-transform: rotate(0.00deg);
+    transform: rotate(0.00deg);
+    -ms-transform-origin: center;
+    -webkit-transform-origin: center;
+    transform-origin: center;
+      opacity: 1;
+      cursor: default;
+      margin-top: 0.00px;
+      margin-right: 0.00px;
+      margin-bottom: 0.00px;
+      margin-left: 0.00px;
+      padding-top: 0.00px;
+      padding-right: 0.00px;
+      padding-bottom: 0.00px;
+      padding-left: 0.00px;
+      fill: rgba(255, 255, 255, 1);
+      stroke: rgba(0, 0, 0, 0.4);
+          stroke-width: 2.00px;
+          stroke-linecap: butt;
+      box-shadow: none;
+      width: 445.80px;
+    height: auto;
+    left: 0.00px;
+    top: 0.00px;
+    bottom: 0.00px;
+
+}
+
+.tableFixHead {
+  overflow: visible;
+  overflow-y: auto;
+  height: 380px;
+}
+
+.tableFixHead thead th {
+  position: sticky;
+  top: 0;
+}
+
+select {
+  border: 1px solid #ccc;
+}
+
+input {
+  padding: 8px 16px;
+  border: 1px solid #ccc;
+  text-align: center;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+th,
+td {
+  padding: 7px 15px;
+  border: 1px solid #ccc;
+}
+
+th {
+  background: #eee;
+}
+
+
+#btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0%;
+}
+
+#space {
+  width: 10px;
+}

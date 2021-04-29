@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>mangaworld Downloader</title>
+    <title>mangaworld Manager</title>
 
     <link rel="stylesheet" href="home.css">
 </head>
@@ -13,39 +13,103 @@
 <body>
     <div data-layer="a0de79de-967d-4069-9a06-a1898f3ea7b8" class="home">
         <div data-layer="1b4a64fb-390c-4949-a873-1a389d32fd7c"
-            class="basicInputButtonsHyperlinksAccentButtonHover5e0299ce"> <svg
+            class="basicInputButtonsHyperlinksAccentButtonHoverc4795ade"> <svg
                 data-layer="fec70940-6a79-4df4-a77d-7d46ab06157e" preserveAspectRatio="none"
-                viewBox="-0.75 -0.75 121.5 33.5" class="buttonBase9fec3df3">
-                <path d="M 0 0 L 120 0 L 120 32 L 0 32 L 0 0 Z" />
+                viewBox="-0.75 -0.75 221.89996337890625 33.5" class="buttonBaseee12a911">
+                <path d="M 0 0 L 220.3999633789063 0 L 220.3999633789063 32 L 0 32 L 0 0 Z" />
             </svg>
-            <input class="hoverBordera85828e0" placeholder="Insert link for volume o chapter" velue=''></input>
+            <input data-layer="0f9365ca-f034-4608-b33a-fb490ca228d7" preserveAspectRatio="none"
+                viewBox="-1.5 -1.5 448.79998779296875 35" class="hoverBorder631050db"
+                placeholder="Insert link for volume o chapter">
+
+            </input>
         </div>
         <div data-layer="bf468b21-aba2-49d1-bb76-8d0044280ca5" class="textTextBoxNoHeaderDisabled">
             <div data-layer="7a393870-dd25-4287-9fa0-a2006913f2fd" class="elementsInputBoxBase"> <svg
                     data-layer="de50bd4f-0aa8-439c-91f5-934ca75103da" preserveAspectRatio="none"
-                    viewBox="-0.75 -0.75 546.0999755859375 33.5" class="textboxFrame">
-                    <path d="M 0 0 L 544.5999755859375 0 L 544.5999755859375 32 L 0 32 L 0 0 Z" />
+                    viewBox="-0.75 -0.75 701.5 64.5" class="textboxFrame">
+                    <path d="M 0 0 L 700 0 L 700 63 L 0 63 L 0 0 Z" />
                 </svg>
             </div>
             <div data-layer="9bcda219-108f-4ad5-bb12-279102e11908" class="hintText">by DarkJak77</div>
-            <div data-layer="6a7cd5a0-c519-44e7-94c1-e722fc52ecff" class="hintText942f18fb">by DarkJak77</div>
-            <div data-layer="23fbe535-00b6-4101-bc25-6de1021d967e" class="hintText3e1951c6">by DarkJak77</div>
+            <div data-layer="08ede2c6-e841-484b-98f9-066f11cd413e" class="hintTextdbda5782">by DarkJak77</div>
+            <div data-layer="84770024-d966-450e-bd3b-6061f6e1de4a" class="hintTextb06f8ab3">by DarkJak77</div>
         </div>
         <button data-layer="0ea9953d-fc7f-40f9-9806-142647372be2" class="basicInputButtonsHyperlinksAccentButtonHover"
-        onclick={download()}>
+            onclick={download()}>
             <svg data-layer="57ca4626-7e3b-438f-9121-25ba57edac8c" preserveAspectRatio="none"
-                viewBox="-0.75 -0.75 121.5 33.5" class="buttonBase">
-                <path d="M 0 0 L 120 0 L 120 32 L 0 32 L 0 0 Z" />
+                viewBox="-0.75 -0.75 165.6998291015625 33.5" class="buttonBase">
+                <path d="M 0 0 L 164.1998291015625 0 L 164.1998291015625 32 L 0 32 L 0 0 Z" />
             </svg>
-            <svg data-layer="4ffee3ea-52af-47f6-9bb6-2860182eb4eb" preserveAspectRatio="none" viewBox="-1.5 -1.5 123 35"
-                class="hoverBorder">
-                <path d="M 0 0 L 120 0 L 120 32 L 0 32 L 0 0 Z" />
+            <svg data-layer="4ffee3ea-52af-47f6-9bb6-2860182eb4eb" preserveAspectRatio="none"
+                viewBox="-1.5 -1.5 167.1998291015625 35" class="hoverBorder">
+                <path d="M 0 0 L 164.1998291015625 0 L 164.1998291015625 32 L 0 32 L 0 0 Z" />
             </svg>
             <div data-layer="7a35dc6a-f89c-4284-a6a1-6f0ca859469b" class="buttonLabel">Download</div>
         </button>
+        <button data-layer="7f047fc8-1f5b-4435-af13-ab9a7267abb0"
+            class="basicInputButtonsHyperlinksAccentButtonHoverf3ada973" onclick={add_to_fav()}> <svg
+                data-layer="7168bddb-e126-4e6a-890b-5a9b4de7e8bd" preserveAspectRatio="none"
+                viewBox="-0.75 -0.75 165.6998291015625 33.5" class="buttonBase1200bf9c">
+                <path d="M 0 0 L 164.1998291015625 0 L 164.1998291015625 32 L 0 32 L 0 0 Z" />
+            </svg>
+            <svg data-layer="b81cbf66-e035-4fab-89e8-fccc3fe4d646" preserveAspectRatio="none"
+                viewBox="-1.5 -1.5 167.1998291015625 35" class="hoverBorder924a67aa">
+                <path d="M 0 0 L 164.1998291015625 0 L 164.1998291015625 32 L 0 32 L 0 0 Z" />
+            </svg>
+            <div data-layer="37848797-8f19-4868-af4e-52b58381c1bc" class="buttonLabel4fefec2f">Add To Favorite</div>
+        </button>
+        <button data-layer="f03bf983-3ffb-4800-937a-06267bd67234"
+            class="basicInputButtonsHyperlinksAccentButtonHover7c2a7e63" onclick={check_new()}> <svg
+                data-layer="0a713bbf-81ca-4ccd-9c20-5e38cc1ee3dc" preserveAspectRatio="none"
+                viewBox="-0.75 -0.75 165.6998291015625 33.5" class="buttonBase1a0b0fca">
+                <path d="M 0 0 L 164.1998291015625 0 L 164.1998291015625 32 L 0 32 L 0 0 Z" />
+            </svg>
+            <svg data-layer="73a433c3-28b2-44da-a13a-2d784e1b9348" preserveAspectRatio="none"
+                viewBox="-1.5 -1.5 167.1998291015625 35" class="hoverBorder30b257de">
+                <path d="M 0 0 L 164.1998291015625 0 L 164.1998291015625 32 L 0 32 L 0 0 Z" />
+            </svg>
+            <div data-layer="6fdea5c2-cbb5-4f41-ac83-1cef7af5f481" class="buttonLabele4680707">Check New Manga</div>
+        </button>
+        <button data-layer="9239b848-144e-45ba-8048-e293eef5c989"
+            class="basicInputButtonsHyperlinksAccentButtonHoverd6cf4591"> <svg
+                data-layer="a1dffa81-6a4d-4612-bb3a-4d556e2885a6" preserveAspectRatio="none"
+                viewBox="-0.75 -0.75 165.6998291015625 33.5" class="buttonBaseeb546a24">
+                <path d="M 0 0 L 164.1998291015625 0 L 164.1998291015625 32 L 0 32 L 0 0 Z" />
+            </svg>
+            <svg data-layer="87f652c0-24f1-467c-9f4d-b7fb6216fba1" preserveAspectRatio="none"
+                viewBox="-1.5 -1.5 167.1998291015625 35" class="hoverBorder4ec55262">
+                <path d="M 0 0 L 164.1998291015625 0 L 164.1998291015625 32 L 0 32 L 0 0 Z" />
+            </svg>
+            <div data-layer="f792f64b-e34a-4c90-aeed-d7080e71e4ba" class="buttonLabel48acd5d3"></div>
+        </button>
+
+        <div data-layer="f3f4a7ed-89e3-4a78-b547-3fc158178bd2"
+            class="basicInputButtonsHyperlinksAccentButtonHover7035264c"> <svg
+                data-layer="ed14ff41-ab73-4760-9280-17941de87182" preserveAspectRatio="none"
+                viewBox="-0.75 -0.75 221.89996337890625 293.5" class="buttonBase262893cb">
+                <path d="M 0 0 L 220.3999633789063 0 L 220.3999633789063 292 L 0 292 L 0 0 Z" />
+            </svg>
+            <svg data-layer="bbeb1bcd-ce6e-4f33-b9bc-ccced3c2f90e" preserveAspectRatio="none"
+                viewBox="-1.5 -1.5 448.79998779296875 295" class="hoverBorder0d9a5924">
+                <path d="M 0 0 L 445.7999877929688 0 L 445.7999877929688 292 L 0 292 L 0 0 Z" />
+            </svg>
+            <div id="table-wrapper" class="tableFixHead">
+                <div id="table-scroll">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th><span class="text">NOME</span></th>
+                                <th><span class="text" id="span_edit">EDIT</span></th>
+                            </tr>
+                        </thead>
+                        <tbody id="tab">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
     </div>
-
-
 
 </body>
 
