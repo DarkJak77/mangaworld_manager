@@ -49,6 +49,15 @@ if (Array.isArray(o)) {
   return o;
 }
 
+function open_browser(type,link) {
+  if (store.browser[type] == '') {
+    store.browser[type] = new invisibleWindow_volume(link)
+    store.browser[type]
+  } else {
+    store.browser[type].goto(link)
+  }
+}
+
 class createWindow {
   constructor(){
     this.win = new BrowserWindow({
@@ -134,7 +143,7 @@ class invisibleWindow_volume {
         preload: path.join(__dirname, '\\src\\js\\preload\\preload_volume.js')
       }
     })
-    this.win.webContents.openDevTools()
+    //this.win.webContents.openDevTools()
     this.win.loadURL(link)
 
     ipcMain.on('toMain', (event, ...args) => {
@@ -172,8 +181,7 @@ ipcMain.handle('add_list', async (event, ...args) => {
 ipcMain.on('toMain', (event, ...args) => {
   let options = {
     type: 'info',
-    title: 'mangaworld downloader',
-    message: args[0],
+    title: 'mangaworld Manager',
   };
 
   if (args[0].includes('*e_r_r_o_r*')) {
@@ -198,19 +206,11 @@ ipcMain.on('toMain', (event, ...args) => {
     }
 
     if (store.check != 2) {
-      if (store.browser.volume == '') {
-        store.browser.volume = new invisibleWindow_volume(args[0].split('_*')[args[0].split('_*').length - 1])
-        store.browser.volume
-      } else {
-        store.browser.volume.goto(args[0].split('_*')[args[0].split('_*').length - 1])
-      }
+      open_browser('volume',args[0].split('_*')[args[0].split('_*').length - 1])
+      
     } else {
-      if (store.browser.volume == '') {
-        store.browser.volume = new invisibleWindow_volume(store.json.data[Object.keys(store.json.data)[store.cycle]].link)
-        store.browser.volume
-      } else {
-        store.browser.volume.goto(store.json.data[Object.keys(store.json.data)[store.cycle]].link)
-      }
+      open_browser('volume',store.json.data[Object.keys(store.json.data)[store.cycle]].link)
+      
     }
 
   } else if (args[0].includes('start')) {
@@ -236,7 +236,6 @@ ipcMain.on('toMain', (event, ...args) => {
         dialog.showMessageBox(null, options)
         store.browser.main.send('rend')
 
-
       } else {
         options.type = 'error'
         options.message = 'this manga is already present'
@@ -248,26 +247,19 @@ ipcMain.on('toMain', (event, ...args) => {
       if (store.cycle != -1) {
         store.browser.volume.goto(store.json.data[Object.keys(store.json.data)[store.cycle]].link)
       } else if (store.cycle == -1 && store.to_do.length != 0) {
-        if (store.browser.chapter == '') {
-          store.browser.chapter = new invisibleWindow_chapter(store.to_do[0])
-          store.browser.chapter
-        } else {
-          store.browser.chapter.goto(store.to_do[0])
-        }
+        open_browser('chapter',store.to_do[0])
         store.to_do.shift()
+
       } else {
-        dialog.showMessageBox(null, { type: 'info', title: 'mangaworld downloader', message: 'Download Complete!' })
+        options.message = 'Download Complete!'
+        dialog.showMessageBox(null, options)
       }
     }
 
   } else if (args[0].includes('chapter_*')) {
     if (!args[0].includes('fav_*')) {
-      if (store.browser.chapter == '') {
-        store.browser.chapter = new invisibleWindow_chapter(args[0].replace('chapter_*', ''))
-        store.browser.chapter
-      } else {
-        store.browser.chapter.goto(args[0].replace('chapter_*', ''))
-      }
+      open_browser('chapter',args[0].replace('chapter_*', ''))
+      
     } else {
       options.type = 'error'
       options.message = 'Please insert a valid main page manga, not a chapter'
@@ -318,11 +310,10 @@ ipcMain.on('toMain', (event, ...args) => {
 
     let value = args[0].split('_*')[1]
 
-    delete store.json.data[value]
+    delete store.json.data[Object.keys(store.json.data)[value]]
     save()
     store.browser.main.send('rend')
     dialog.showMessageBox(null, { type: 'info', title: 'mangaworld downloader', message: 'Manga Successfully removed!' })
-
 
   }
 })
