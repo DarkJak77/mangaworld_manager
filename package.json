@@ -25,6 +25,7 @@
     "electron-download-manager": "^2.1.2",
     "electron-json-storage": "^4.4.0",
     "electron-osx-prompt": "^1.4.1",
+    "electron-progressbar": "^2.0.0",
     "electron-squirrel-startup": "^1.0.0",
     "request": "^2.88.2"
   },

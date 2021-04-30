@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain, dialog } = require('electron')
+const { app, BrowserWindow, ipcMain, dialog, shell } = require('electron')
 const path = require('path')
 const fs = require('fs')
 const request = require('request')
@@ -32,24 +32,24 @@ function isObject(v) {
   return '[object Object]' === Object.prototype.toString.call(v);
 };
 
-JSON.sort = function(o) {
-if (Array.isArray(o)) {
-      return o.sort().map(JSON.sort);
+JSON.sort = function (o) {
+  if (Array.isArray(o)) {
+    return o.sort().map(JSON.sort);
   } else if (isObject(o)) {
-      return Object
-          .keys(o)
+    return Object
+      .keys(o)
       .sort()
-          .reduce(function(a, k) {
-              a[k] = JSON.sort(o[k]);
+      .reduce(function (a, k) {
+        a[k] = JSON.sort(o[k]);
 
-              return a;
-          }, {});
+        return a;
+      }, {});
   }
 
   return o;
 }
 
-function open_browser(type,link) {
+function open_browser(type, link) {
   if (store.browser[type] == '') {
     store.browser[type] = new invisibleWindow_volume(link)
     store.browser[type]
@@ -59,7 +59,7 @@ function open_browser(type,link) {
 }
 
 class createWindow {
-  constructor(){
+  constructor() {
     this.win = new BrowserWindow({
       width: 704,
       height: 528,
@@ -72,17 +72,46 @@ class createWindow {
         preload: path.join(__dirname, '\\src\\js\\preload\\preload.js')
       }
     })
+
+    //this.win.webContents.openDevTools()
+    // Disable the Menu
+    this.win.setMenu(null)
+
+    this.win.loadFile(__dirname + '\\src\\web\\home.html')
+
+    ipcMain.on('toMain', (event, ...args) => {
+      if (args[0].includes('how_to_*')) {
+        let options = {}
+
+        options.defaultId = 0, // bound to buttons array
+
+        options.buttons = ['Open Download Directory', 'Exit']
+        options.message =
+          'DOWNLOAD: \n- Insert link of Chapter for single download or insert main page link of manga to download ALL CHAPTER\n' +
+          'ADD TO FAVORITE: \n- Insert a main page link of manga to add in the favorite\n' +
+          'CHECK NEW MANGA: \n- This function only work with a favorite manga, check if new chapter is published ad download automatically\n' +
+          'OPTION: \n- Is above this text'
   
-  this.win.webContents.openDevTools()
-  // Disable the Menu
-  this.win.setMenu(null)
-
-  this.win.loadFile(__dirname + '\\src\\web\\home.html')
+        dialog.showMessageBox(this.win, options)
+          .then(result => {
+            if (result.response === 0) {
+              try {
+                fs.mkdirSync(app.getPath('downloads') + '\\mangaworld Manager\\', { recursive: true });
+              } catch (e) {
+              }
+              shell.openPath(app.getPath('downloads') + '\\mangaworld Manager\\')
+            } 
+          }
+          )
+      }
+    }
+    )
   }
 
-  send(msg){
-    this.win.webContents.send('myRenderChannel',msg)
+  send(msg) {
+    this.win.webContents.send('myRenderChannel', msg)
   }
+
 }
 
 class invisibleWindow_chapter {
@@ -119,7 +148,7 @@ class invisibleWindow_chapter {
           dialog.showMessageBox(null, { type: 'info', title: 'mangaworld downloader', message: 'Download Complete!' })
           store.initialize()
           store.browser.main.send('rend')
-          
+
         }
       }
     })
@@ -198,19 +227,21 @@ ipcMain.on('toMain', (event, ...args) => {
       if (Object.keys(store.json.data).length != 0) {
         store.cycle = Object.keys(store.json.data).length - 1
         store.check = 2
+
       } else {
         options.type = 'error'
         options.message = 'There are no Manga favorites'
         dialog.showMessageBox(null, options)
+        store.initialize()
       }
     }
 
     if (store.check != 2) {
-      open_browser('volume',args[0].split('_*')[args[0].split('_*').length - 1])
-      
+      open_browser('volume', args[0].split('_*')[args[0].split('_*').length - 1])
+
     } else {
-      open_browser('volume',store.json.data[Object.keys(store.json.data)[store.cycle]].link)
-      
+      open_browser('volume', store.json.data[Object.keys(store.json.data)[store.cycle]].link)
+
     }
 
   } else if (args[0].includes('start')) {
@@ -232,38 +263,46 @@ ipcMain.on('toMain', (event, ...args) => {
         }
 
         save()
+        
         options.message = 'Manga added!'
         dialog.showMessageBox(null, options)
         store.browser.main.send('rend')
+        store.initialize()
 
       } else {
         options.type = 'error'
         options.message = 'this manga is already present'
         dialog.showMessageBox(null, options)
+        store.initialize()
       }
+      
 
     } else if (store.check == 2) {
       store.cycle -= 1
+      
       if (store.cycle != -1) {
+
         store.browser.volume.goto(store.json.data[Object.keys(store.json.data)[store.cycle]].link)
       } else if (store.cycle == -1 && store.to_do.length != 0) {
-        open_browser('chapter',store.to_do[0])
+        open_browser('chapter', store.to_do[0])
         store.to_do.shift()
 
       } else {
         options.message = 'Download Complete!'
         dialog.showMessageBox(null, options)
+        store.initialize()
       }
     }
 
   } else if (args[0].includes('chapter_*')) {
     if (!args[0].includes('fav_*')) {
-      open_browser('chapter',args[0].replace('chapter_*', ''))
-      
+      open_browser('chapter', args[0].replace('chapter_*', ''))
+
     } else {
       options.type = 'error'
       options.message = 'Please insert a valid main page manga, not a chapter'
       dialog.showMessageBox(null, options)
+      store.initialize()
     }
 
   } else if (args[0].includes('master_*')) {
@@ -290,9 +329,9 @@ ipcMain.on('toMain', (event, ...args) => {
     let dir = ''
 
     if (store.info.volume != 'none') {
-      dir = __dirname + '\\download\\' + store.info.title + '\\' + store.info.volume + '\\' + store.info.chapter + '\\'
+      dir = app.getPath('downloads') + '\\mangaworld Manager\\' + store.info.title + '\\' + store.info.volume + '\\' + store.info.chapter + '\\'
     } else {
-      dir = __dirname + '\\download\\' + store.info.title + '\\' + store.info.chapter + '\\'
+      dir = app.getPath('downloads') + '\\mangaworld Manager\\' + store.info.title + '\\' + store.info.chapter + '\\'
     }
 
     try {

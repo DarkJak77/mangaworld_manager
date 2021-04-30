@@ -1013,7 +1013,7 @@
 .tableFixHead {
   overflow: visible;
   overflow-y: auto;
-  height: 380px;
+  height: 268px;
 }
 
 .tableFixHead thead th {
@@ -1036,14 +1036,29 @@ table {
   width: 100%;
 }
 
-th,
-td {
+th,td {
   padding: 7px 15px;
   border: 1px solid #ccc;
 }
 
-th {
+th.small {
+  padding: 7px 8px;
+  border: 1px solid #ccc;
   background: #eee;
+  width: 20%;
+}
+
+th.big {
+  padding: 7px 110px;
+  border: 1px solid #ccc;
+  background: #eee;
+  width: 80%;
+}
+
+#space {
+    padding: 7px 6px;
+    border: 1px solid #ccc;
+    background: #eee;
 }
 
 
@@ -1054,6 +1069,13 @@ th {
   padding: 0%;
 }
 
-#space {
-  width: 10px;
+#del {
+  width: 100%;
+  padding: 0px 0px;
+}
+
+#name_manga {
+  
+  width: 315px;
+  word-wrap: break-word;
 }
