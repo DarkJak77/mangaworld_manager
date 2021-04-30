@@ -8,6 +8,14 @@ if (require('electron-squirrel-startup')) return app.quit();
 
 let store = new storage()
 
+const download = (url, path, callback) => {
+  request.head(url, (err, res, body) => {
+    request(url)
+      .pipe(fs.createWriteStream(path))
+      .on('close', callback)
+  })
+}
+
 function load() {
   store.json.raw = fs.readFileSync(__dirname + '\\src\\json\\fav.json');
   store.json.data = JSON.parse(store.json.raw)
@@ -15,17 +23,145 @@ function load() {
 load()
 
 function save() {
-  store.tmp = JSON.stringify(store.json.data)
+  store.tmp = JSON.stringify(JSON.sort(store.json.data))
   fs.writeFileSync(__dirname + '\\src\\json\\fav.json', store.tmp);
   load()
 }
 
-const download = (url, path, callback) => {
-  request.head(url, (err, res, body) => {
-    request(url)
-      .pipe(fs.createWriteStream(path))
-      .on('close', callback)
-  })
+function isObject(v) {
+  return '[object Object]' === Object.prototype.toString.call(v);
+};
+
+JSON.sort = function(o) {
+if (Array.isArray(o)) {
+      return o.sort().map(JSON.sort);
+  } else if (isObject(o)) {
+      return Object
+          .keys(o)
+      .sort()
+          .reduce(function(a, k) {
+              a[k] = JSON.sort(o[k]);
+
+              return a;
+          }, {});
+  }
+
+  return o;
+}
+
+class createWindow {
+  constructor(){
+    this.win = new BrowserWindow({
+      width: 704,
+      height: 528,
+      //resizable: false,
+      //maximizable: false,
+      /*
+      icon: __dirname + "\\src\\ico\\police.ico",
+      */
+      webPreferences: {
+        preload: path.join(__dirname, '\\src\\js\\preload\\preload.js')
+      }
+    })
+  
+  this.win.webContents.openDevTools()
+  // Disable the Menu
+  this.win.setMenu(null)
+
+  this.win.loadFile(__dirname + '\\src\\web\\home.html')
+  }
+
+  send(msg){
+    this.win.webContents.send('myRenderChannel',msg)
+  }
+}
+
+class invisibleWindow_chapter {
+
+  constructor(link) {
+    this.win = new BrowserWindow({
+      width: 800,
+      height: 600,
+      maximizable: true,
+      show: false,
+
+      webPreferences: {
+        preload: path.join(__dirname, '\\src\\js\\preload\\preload_chapter.js')
+      }
+    })
+
+    if (link.includes('?style=list')) {
+      this.win.loadURL(link)
+    } else {
+      this.win.loadURL(link + '?style=list')
+    }
+
+    ipcMain.on('toMain', (event, ...args) => {
+      if (args[0] == 'quit') {
+
+        if (store.to_do.length != 0) {
+          if (store.to_do[0].includes('?style=list')) {
+            this.win.loadURL(store.to_do[0])
+          } else {
+            this.win.loadURL(store.to_do[0] + '?style=list')
+          }
+          store.to_do.shift()
+        } else if (store.to_do.length == 0) {
+          dialog.showMessageBox(null, { type: 'info', title: 'mangaworld downloader', message: 'Download Complete!' })
+          store.initialize()
+          store.browser.main.send('rend')
+          
+        }
+      }
+    })
+  }
+
+  goto(link) {
+    this.win.loadURL(link)
+  }
+}
+
+class invisibleWindow_volume {
+
+  constructor(link) {
+    this.win = new BrowserWindow({
+      width: 800,
+      height: 600,
+      maximizable: true,
+      show: false,
+
+      webPreferences: {
+        preload: path.join(__dirname, '\\src\\js\\preload\\preload_volume.js')
+      }
+    })
+    this.win.webContents.openDevTools()
+    this.win.loadURL(link)
+
+    ipcMain.on('toMain', (event, ...args) => {
+      if (args[0].includes('check_manga_*')) {
+        if (store.check == 2) {
+          let old_value = store.json.data[args[0].split('_*')[1]].cap
+          store.json.data[args[0].split('_*')[1]].cap = parseInt(args[0].split('_*')[2])
+          event.returnValue = old_value
+          if ((parseInt(args[0].split('_*')[2]) - old_value) != 0) {
+            dialog.showMessageBox(null, {
+              type: 'info',
+              title: 'mangaworld downloader',
+              message: 'I found ' + (parseInt(args[0].split('_*')[2]) - old_value) + ' new chapter of ' + args[0].split('_*')[1]
+            })
+          }
+
+          save()
+        } else {
+          event.returnValue = 0
+        }
+      }
+    })
+  }
+
+  goto(link) {
+    this.win.loadURL(link)
+  }
 }
 
 ipcMain.handle('add_list', async (event, ...args) => {
@@ -40,7 +176,7 @@ ipcMain.on('toMain', (event, ...args) => {
     message: args[0],
   };
 
-  if (args[0] == 'error') {
+  if (args[0].includes('*e_r_r_o_r*')) {
     options.type = 'error'
     options.message = 'Please insert a valid mangaworld link'
     dialog.showMessageBox(null, options)
@@ -98,6 +234,8 @@ ipcMain.on('toMain', (event, ...args) => {
         save()
         options.message = 'Manga added!'
         dialog.showMessageBox(null, options)
+        store.browser.main.send('rend')
+
 
       } else {
         options.type = 'error'
@@ -176,124 +314,22 @@ ipcMain.on('toMain', (event, ...args) => {
     download(url, path, () => {
     })
 
+  } else if (args[0].includes('del_*')) {
+
+    let value = args[0].split('_*')[1]
+
+    delete store.json.data[value]
+    save()
+    store.browser.main.send('rend')
+    dialog.showMessageBox(null, { type: 'info', title: 'mangaworld downloader', message: 'Manga Successfully removed!' })
+
+
   }
 })
 
-function createWindow() {
-  const win = new BrowserWindow({
-    width: 704,
-    height: 528,
-    resizable: false,
-    maximizable: false,
-    /*
-    icon: __dirname + "\\src\\ico\\police.ico",
-    */
-    webPreferences: {
-      preload: path.join(__dirname, '\\src\\js\\preload\\preload.js')
-    }
-  })
-  //win.webContents.openDevTools()
-  // Disable the Menu
-  win.setMenu(null)
-
-  win.loadFile(__dirname + '\\src\\web\\home.html')
-}
-
-class invisibleWindow_chapter {
-
-  constructor(link) {
-    this.win = new BrowserWindow({
-      width: 800,
-      height: 600,
-      maximizable: true,
-      show: false,
-
-      webPreferences: {
-        preload: path.join(__dirname, '\\src\\js\\preload\\preload_chapter.js')
-      }
-    })
-
-    if (link.includes('?style=list')) {
-      this.win.loadURL(link)
-    } else {
-      this.win.loadURL(link + '?style=list')
-    }
-
-    ipcMain.on('toMain', (event, ...args) => {
-      if (args[0] == 'quit') {
-
-        store.info = {
-          title: '',
-          volume: '',
-          chapter: '',
-          pre_link: ''
-        }
-
-        if (store.to_do.length != 0) {
-          if (store.to_do[0].includes('?style=list')) {
-            this.win.loadURL(store.to_do[0])
-          } else {
-            this.win.loadURL(store.to_do[0] + '?style=list')
-          }
-          store.to_do.shift()
-        } else if (store.to_do.length == 0) {
-          dialog.showMessageBox(null, { type: 'info', title: 'mangaworld downloader', message: 'Download Complete!' })
-        }
-      }
-    })
-  }
-
-  goto(link) {
-    this.win.loadURL(link)
-  }
-}
-
-class invisibleWindow_volume {
-
-  constructor(link) {
-    this.win = new BrowserWindow({
-      width: 800,
-      height: 600,
-      maximizable: true,
-      show: false,
-
-      webPreferences: {
-        preload: path.join(__dirname, '\\src\\js\\preload\\preload_volume.js')
-      }
-    })
-    //this.win.webContents.openDevTools()
-    this.win.loadURL(link)
-
-    ipcMain.on('toMain', (event, ...args) => {
-      if (args[0].includes('check_manga_*')) {
-        if (store.check == 2) {
-          let old_value = store.json.data[args[0].split('_*')[1]].cap
-          store.json.data[args[0].split('_*')[1]].cap = parseInt(args[0].split('_*')[2])
-          event.returnValue = old_value
-          if ((parseInt(args[0].split('_*')[2]) - old_value) != 0) {
-            dialog.showMessageBox(null, {
-              type: 'info',
-              title: 'mangaworld downloader',
-              message: 'I found ' + (parseInt(args[0].split('_*')[2]) - old_value) + ' new chapter of ' + args[0].split('_*')[1]
-            })
-          }
-
-          save()
-        } else {
-          event.returnValue = 0
-        }
-      }
-    })
-  }
-
-  goto(link) {
-    this.win.loadURL(link)
-  }
-
-}
-
 app.whenReady().then(() => {
-  createWindow()
+  store.browser.main = new createWindow()
+  store.browser.main
 
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) {
