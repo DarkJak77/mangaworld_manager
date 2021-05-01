@@ -52,6 +52,8 @@ contextBridge.exposeInMainWorld(
 // crea la tabella quando la pagina main viene creata
 window.addEventListener('DOMContentLoaded', () => {
   to_rend()
+  // cerca nuovi manga all'avvio
+  document.getElementsByClassName('basicInputButtonsHyperlinksAccentButtonHover7c2a7e63')[0].click()
 })
 
 // aggiorna la tabella a ogni variazione, fumetti aggiunti o rimossi
