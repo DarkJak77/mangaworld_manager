@@ -117,9 +117,9 @@ class createWindow {
   }
 
   // usata per creare una barra per gli incarichi ( SPERIMENTALE )
-  progress(value) {
+  progress(value,max_value) {
     this.win.setProgressBar(
-      ( ( value * 100 ) / store.tmp_value.to_do ) / 100
+      ( ( value * 100 ) / max_value ) / 100
     )
   }
 
@@ -250,6 +250,7 @@ ipcMain.on('toMain', (event, ...args) => {
     }
 
     if (store.check == 2) {
+      store.browser.main.progress(1,store.json.data[Object.keys(store.json.data).length])
       open_browser('volume', store.json.data[Object.keys(store.json.data)[store.cycle]].link)
 
     } else {
@@ -291,6 +292,8 @@ ipcMain.on('toMain', (event, ...args) => {
 
     } else if (store.check == 2) { // se si stanno cercando nuovi capitoli dei manga preferiti
       store.cycle -= 1
+      store.tmp_value += 1
+      store.browser.main.progress(store.tmp_value,store.json.data[Object.keys(store.json.data).length])
 
       // se ci sono ancora manga da controllare
       if (store.cycle != -1) {
@@ -302,9 +305,10 @@ ipcMain.on('toMain', (event, ...args) => {
         store.to_do.shift()
 
       } else {
-        options.message = 'Download Complete!'
+        options.message = 'Scan completed!'
         dialog.showMessageBox(null, options)
         store.initialize()
+        store.browser.main.no_bar()
       }
     }
 
@@ -390,7 +394,7 @@ ipcMain.on('toMain', (event, ...args) => {
       } else {
         store.browser.chapter.goto(store.to_do[0] + '?style=list')
       }
-      store.browser.main.progress(store.tmp_value.do)
+      store.browser.main.progress(store.tmp_value.do,store.tmp_value.to_do)
       store.to_do.shift()
       store.tmp_value.do += 1
     } else if (store.to_do.length == 0) {
