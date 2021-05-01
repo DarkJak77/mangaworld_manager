@@ -2,8 +2,10 @@ const { ipcRenderer, contextBridge } = require('electron');
 const path = require('path')
 const fs = require('fs')
 
+// questi sono gli unici canali validi per amandare messaggi dalla pagina principale alle secondarie e viceversa
 const validChannels = ["toMain", "myRenderChannel"];
 
+// questa funzione serve per aggiornare la taballe presente nella pagina principale con i manga aggiunti tra i preferiti
 function to_rend() {
   let json = {
     raw: '',
@@ -22,6 +24,7 @@ function to_rend() {
 ).join(' ')
 }
 
+// questa funzione rende i comandi qui sotto richiamabili dal file master.js
 contextBridge.exposeInMainWorld(
   "api", {
   // used to send message from "master.js" to "main.js"
@@ -31,6 +34,8 @@ contextBridge.exposeInMainWorld(
     }
   },
 
+  // controlla se i link inseriti nell'input sono validi, e se si tratta di un singolo capitolo o
+  // della pagina principale di un manga
   check: () => {
     let values = document.getElementsByClassName('hoverBorder631050db')[0].value
     if (values.includes('https://www.mangaworld.io/manga/') && values.includes('/read/')) {
@@ -41,17 +46,15 @@ contextBridge.exposeInMainWorld(
       return '*e_r_r_o_r*'
     }
   },
-
-  render: () => {
-    to_rend()
-  }
 }
 )
 
+// crea la tabella quando la pagina main viene creata
 window.addEventListener('DOMContentLoaded', () => {
   to_rend()
 })
 
+// aggiorna la tabella a ogni variazione, fumetti aggiunti o rimossi
 ipcRenderer.on("myRenderChannel", (event, ...args) => {
   if (args[0] == 'rend'){
     to_rend()

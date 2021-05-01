@@ -8,6 +8,7 @@ window.addEventListener('DOMContentLoaded', () => {
   let chapter_tovalue = document.getElementsByClassName('chapter custom-select')[0]
   let chapter = ''
 
+  // ottiene il numero del capitolo dal menù a tendina, trovando quello selezionato
   for (let i = 0; i < chapter_tovalue.length; i++) {
     const e = chapter_tovalue[i];
     if(e.selected == true){
@@ -15,6 +16,7 @@ window.addEventListener('DOMContentLoaded', () => {
     }
   }
 
+  // se il lenght è uguale a 0 vuol dire che il manga non ha volumi ma solo capitoli
   if (volume_tovalue.length != 0){
     volume_tovalue = document.getElementsByClassName('volume custom-select')[0]
     for (let i = 0; i < volume_tovalue.length; i++) {

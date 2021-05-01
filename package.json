@@ -1,8 +1,8 @@
 {
-  "name": "mangaworld_downloader",
-  "version": "1.0.0",
+  "name": "mangaworld_manager",
+  "version": "2.0.0",
   "author": "DarkJak77",
-  "description": "simple app to download manga to mangaworld.io",
+  "description": "simple app to manage manga to mangaworld.io",
   "main": "main.js",
   "scripts": {
     "start": "electron-forge start",
@@ -27,11 +27,14 @@
     "electron-osx-prompt": "^1.4.1",
     "electron-progressbar": "^2.0.0",
     "electron-squirrel-startup": "^1.0.0",
+    "nodejs-file-downloader": "^4.4.2",
     "request": "^2.88.2"
   },
   "config": {
     "forge": {
-      "packagerConfig": {},
+      "packagerConfig": {
+        "icon": "./src/ico/manga.ico"
+      },
       "makers": [
         {
           "name": "@electron-forge/maker-squirrel",
