@@ -60,7 +60,7 @@ class Store {
       pre_link: ''
     }
 
-    this.to_do.length = []
+    this.to_do = []
 
     this.check = 0
 

@@ -512,10 +512,10 @@ ipcMain.on('toMain', (event, ...args) => {
       store.browser.main.title_download()
 
       // avvia i download
-      let multi_task = 0
-      if (store.tmp_value.to_do > 20) {
+      let multi_task = 1
+      if (store.tmp_value.to_do >= 20) {
         multi_task = 20
-      } else if (store.tmp_value.to_do > 10) {
+      } else if (store.tmp_value.to_do >= 10) {
         multi_task = 10
       }
 
