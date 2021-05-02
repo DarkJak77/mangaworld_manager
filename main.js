@@ -9,13 +9,37 @@ if (require('electron-squirrel-startup')) return app.quit();
 
 let store = new storage()
 
-// Funzione per il Downlaod
-const download = (url, path, callback) => {
+// Funzione per il download
+const download = async (url, path, callback) => {
   request.head(url, (err, res, body) => {
     request(url)
       .pipe(fs.createWriteStream(path))
       .on('close', callback)
   })
+}
+
+// callback function per downlaod, fa si che finchè ci sono elementi
+// in store.dowload_list continui a scaricare e aggiornate il titolo
+async function down() {
+  store.tmp_value.do += 1
+  store.browser.main.progress(store.tmp_value.do, store.tmp_value.to_do)
+  store.browser.main.title_download()
+  if (store.download_list.length != 0) {
+    let url = store.download_list[0].url
+    let path = store.download_list[0].path
+    store.download_list.shift()
+    download(url, path, () => {
+      down()
+    })
+  } else {
+    if ((store.tmp_value.to_do - store.tmp_value.do) == 0) {
+      dialog.showMessageBox(null, { type: 'info', title: 'mangaworld Manager', message: 'Download Complete!' })
+      store.initialize()
+      store.browser.main.no_bar()
+      store.browser.main.title_default()
+    }
+
+  }
 }
 
 // Serve per caricare il file json con le informazioni sui manga
@@ -66,7 +90,7 @@ function open_browser(type, link) {
     } else {
       store.browser[type] = new invisibleWindow_chapter(link)
     }
-    
+
     store.browser[type]
   } else {
     store.browser[type].goto(link)
@@ -76,14 +100,17 @@ function open_browser(type, link) {
 // questa classe gestisce la finestra principale
 class createWindow {
   constructor() {
+    this.close = false
+
     this.win = new BrowserWindow({
       width: 704,
       height: 528,
       resizable: false,
       maximizable: false,
+      title: 'mangaworld Manager',
 
       icon: __dirname + "\\src\\ico\\manga.ico",
-      
+
       webPreferences: {
         preload: path.join(__dirname, '\\src\\js\\preload\\preload.js')
       }
@@ -94,6 +121,55 @@ class createWindow {
     this.win.setMenu(null)
 
     this.win.loadFile(__dirname + '\\src\\web\\home.html')
+
+
+    // siccome il programma usa tre pagine chiudendo la principale vengono chiuse tutte
+    // In questo modo se ci sono ancora download in corso evita di distruggerli
+    this.win.on('close', (event) => {
+
+      this.confirmAndQuit(event)
+
+    })
+
+
+  }
+
+  // Evita la chiusura dell'app se ci sono download in corso
+  confirmAndQuit(e) {
+
+    if (this.close == false) {
+      e.preventDefault();
+    }
+
+    // dialog options
+    const messageBoxOptions = {
+
+      title: 'mangaworld Manager',
+      type: 'info',
+      buttons: ['Exit', 'Wait up'],
+      defaultId: 0,
+      message: 'There are still ' + (store.tmp_value.to_do - store.tmp_value.do) + ' downloads in progress...'
+
+    };
+
+    if ((store.tmp_value.to_do - store.tmp_value.do) == 0) {
+      this.close = true
+      app.quit()
+    } else {
+      //show the dialog
+      dialog.showMessageBox(this.win, messageBoxOptions)
+        .then(result => {
+          if (result.response == 0) {
+            this.close = true
+            app.quit()
+
+          }
+        }
+        )
+    }
+
+
+
   }
 
   // serve per mandare messaggi dalla finestra principale alle secondarie
@@ -117,14 +193,31 @@ class createWindow {
   }
 
   // usata per creare una barra per gli incarichi ( SPERIMENTALE )
-  progress(value,max_value) {
+  progress(value, max_value) {
     this.win.setProgressBar(
-      ( ( value * 100 ) / max_value ) / 100
+      ((value * 100) / max_value) / 100
     )
   }
 
+  // usata per rimuovere la barra di progressione
   no_bar() {
     this.win.setProgressBar(0)
+  }
+
+  // riporta il titolo a quello originale
+  title_default() {
+    this.win.setTitle('mangaworld Manager')
+  }
+
+  // cambia il titolo in base al numero di download rimanenti
+  title_download() {
+    this.win.setTitle('mangaworld Manager : ' + store.tmp_value.do + ' Download on ' + store.tmp_value.to_do +
+      ' --- Remain ' + (store.tmp_value.to_do - store.tmp_value.do) + ' Files')
+  }
+
+  // imposta un titolo personalizzato
+  title(text) {
+    this.win.setTitle('mangaworld Manager - ' + text)
   }
 
 }
@@ -250,10 +343,12 @@ ipcMain.on('toMain', (event, ...args) => {
     }
 
     if (store.check == 2) {
-      store.browser.main.progress(1,store.json.data[Object.keys(store.json.data).length])
+      store.browser.main.title('Scanning...')
+      store.browser.main.progress(1, store.json.data[Object.keys(store.json.data).length])
       open_browser('volume', store.json.data[Object.keys(store.json.data)[store.cycle]].link)
 
     } else {
+      store.browser.main.title('Scanning...')
       // se non si sta cercando nuovi capitoli dei manga preferiti usa il link 
       open_browser('volume', args[0].split('_*')[args[0].split('_*').length - 1])
 
@@ -293,7 +388,7 @@ ipcMain.on('toMain', (event, ...args) => {
     } else if (store.check == 2) { // se si stanno cercando nuovi capitoli dei manga preferiti
       store.cycle -= 1
       store.tmp_value += 1
-      store.browser.main.progress(store.tmp_value,store.json.data[Object.keys(store.json.data).length])
+      store.browser.main.progress(store.tmp_value, store.json.data[Object.keys(store.json.data).length])
 
       // se ci sono ancora manga da controllare
       if (store.cycle != -1) {
@@ -309,11 +404,13 @@ ipcMain.on('toMain', (event, ...args) => {
         dialog.showMessageBox(null, options)
         store.initialize()
         store.browser.main.no_bar()
+        store.browser.main.title_default()
       }
     }
 
   } else if (args[0].includes('chapter_*')) { // gestisce la finestra che controlla i capitoli
     if (!args[0].includes('fav_*')) { // verifica che non sia in modalità aggiungi favoriti
+      store.browser.main.title('Scanning...')
       open_browser('chapter', args[0].replace('chapter_*', ''))
 
     } else {
@@ -363,8 +460,12 @@ ipcMain.on('toMain', (event, ...args) => {
     let path = dir + value[1]
 
     const url = store.info.pre_link + value[1]
-    download(url, path, () => {
-    })
+    store.download_list.push(
+      {
+        'url': url,
+        'path': path
+      })
+
 
   } else if (args[0].includes('check_manga_*')) { // usata quando si cercano nuovi capitoli dei manga preferiti
     if (store.check == 2) {
@@ -374,7 +475,7 @@ ipcMain.on('toMain', (event, ...args) => {
       if ((parseInt(args[0].split('_*')[2]) - old_value) != 0) {
         dialog.showMessageBox(null, {
           type: 'info',
-          title: 'mangaworld downloader',
+          title: 'mangaworld Manager',
           message: 'I found ' + (parseInt(args[0].split('_*')[2]) - old_value) + ' new chapter of ' + args[0].split('_*')[1]
         })
       }
@@ -394,15 +495,35 @@ ipcMain.on('toMain', (event, ...args) => {
       } else {
         store.browser.chapter.goto(store.to_do[0] + '?style=list')
       }
-      store.browser.main.progress(store.tmp_value.do,store.tmp_value.to_do)
+      store.browser.main.progress(store.tmp_value.do, store.tmp_value.to_do)
       store.to_do.shift()
       store.tmp_value.do += 1
     } else if (store.to_do.length == 0) {
-      dialog.showMessageBox(null, { type: 'info', title: 'mangaworld downloader', message: 'Download Complete!' })
+      dialog.showMessageBox(null, { type: 'info', title: 'mangaworld Manager', message: 'links collected, downloads will start now!' })
       store.initialize()
       store.browser.main.send('rend')
       store.browser.main.no_bar()
+      store.tmp_value.to_do = store.download_list.length
 
+      store.browser.main.progress(store.tmp_value.do, store.tmp_value.to_do)
+      store.browser.main.title_download()
+
+      // avvia i download
+      let multi_task = 0
+      if (store.tmp_value.to_do > 20) {
+        multi_task = 20
+      } else if (store.tmp_value.to_do > 10) {
+        multi_task = 10
+      }
+
+      for (let i = 0; i < multi_task; i++) {
+        let url = store.download_list[0].url
+        let path = store.download_list[0].path
+        download(url, path, () => {
+          down()
+        })
+        store.download_list.shift()
+      }
     }
   }
 }
@@ -417,10 +538,13 @@ app.whenReady().then(() => {
       createWindow()
     }
   })
+
 })
+
 
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
     app.quit()
   }
 })
+

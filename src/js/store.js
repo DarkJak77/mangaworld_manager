@@ -28,6 +28,9 @@ class Store {
     // contiene la lista dei link dei capitoli da elaborare
     this.to_do = []
 
+    // contiene i dizionari con dentro gli url e path dei download
+    this.download_list = []
+
     // 0 = normale
     // 1 = manga nei preferiti
     // 2 = cerca nuovi capitoli
@@ -42,8 +45,8 @@ class Store {
 
     // usato per la barra ( SPERIMENTALE )
     this.tmp_value = {
-      to_do : 1,
-      do: 1
+      to_do : 0,
+      do: 0
     }
 
   }
@@ -66,8 +69,8 @@ class Store {
     this.tmp = ''
 
     this.tmp_value = {
-      to_do : 1,
-      do: 1
+      to_do : 0,
+      do: 0
     }
   }
 }
