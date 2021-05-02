@@ -12,7 +12,7 @@ class Store {
 
     //contiene le varie finestre
     this.browser = {
-      'main':'',
+      'main': '',
       'volume': '',
       'chapter': ''
     }
@@ -21,10 +21,10 @@ class Store {
     this.json = {
       // contiene il file raw del json, quando si salva il json però per un breve istante contiene la 
       // versione stringify, non è il massimo ma serve a risparmiare variabili
-      'raw': '', 
+      'raw': '',
       'data': ''
     }
-    
+
     // contiene la lista dei link dei capitoli da elaborare
     this.to_do = []
 
@@ -48,7 +48,7 @@ class Store {
 
     // usato per la barra
     this.tmp_value = {
-      to_do : 0,
+      to_do: 0,
       do: 0
     }
 
@@ -74,7 +74,7 @@ class Store {
     this.tmp = ''
 
     this.tmp_value = {
-      to_do : 0,
+      to_do: 0,
       do: 0
     }
   }
