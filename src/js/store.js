@@ -40,10 +40,13 @@ class Store {
     // delle key del file json 
     this.cycle = 0
 
+    // Per la barra quando cerca nuovi capitoli
+    this.cycle_bar = 1
+
     // contiene il link che verrà usato per salvare il manga nei preferiti
     this.tmp = ''
 
-    // usato per la barra ( SPERIMENTALE )
+    // usato per la barra
     this.tmp_value = {
       to_do : 0,
       do: 0
@@ -65,6 +68,8 @@ class Store {
     this.check = 0
 
     this.cycle = 0
+
+    this.cycle_bar = 1
 
     this.tmp = ''
 

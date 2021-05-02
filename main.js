@@ -342,12 +342,13 @@ ipcMain.on('toMain', (event, ...args) => {
         options.message = 'There are no Manga favorites'
         dialog.showMessageBox(null, options)
         store.initialize()
+        store.browser.main.no_bar()
       }
     }
 
     if (store.check == 2) {
       store.browser.main.title('Scanning...')
-      store.browser.main.progress(1, store.json.data[Object.keys(store.json.data).length])
+      store.browser.main.progress(store.cycle_bar, Object.keys(store.json.data).length)
       open_browser('volume', store.json.data[Object.keys(store.json.data)[store.cycle]].link)
 
     } else {
@@ -390,8 +391,8 @@ ipcMain.on('toMain', (event, ...args) => {
 
     } else if (store.check == 2) { // se si stanno cercando nuovi capitoli dei manga preferiti
       store.cycle -= 1
-      store.tmp_value += 1
-      store.browser.main.progress(store.tmp_value, store.json.data[Object.keys(store.json.data).length])
+      store.cycle_bar += 1
+      store.browser.main.progress(store.cycle_bar, Object.keys(store.json.data).length)
 
       // se ci sono ancora manga da controllare
       if (store.cycle != -1) {
