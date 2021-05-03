@@ -305,8 +305,8 @@ ipcMain.on('toMain', (event, ...args) => {
       'DOWNLOAD: \n- Insert link of Chapter for single download or insert main page link of manga to download ALL CHAPTER\n' +
       'ADD TO FAVORITE: \n- Insert a main page link of manga to add in the favorite\n' +
       'CHECK NEW MANGA: \n- This function only work with a favorite manga, check if new chapter is published ad download automatically\n' +
-      'OPTION: \n- Is above this text' +
-      'DEVELOPER PAGE: \N- Click on that button to open developer page'
+      'OPTION: \n- Is above this text\n' +
+      'DEVELOPER PAGE: \N- Click on that button to open developer page\n'
 
     store.browser.main.dialog(options)
 
