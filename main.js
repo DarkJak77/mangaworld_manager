@@ -518,6 +518,8 @@ ipcMain.on('toMain', (event, ...args) => {
         multi_task = 20
       } else if (store.tmp_value.to_do >= 10) {
         multi_task = 10
+      } else {
+        multi_task == store.tmp_value.to_do
       }
 
       for (let i = 0; i < multi_task; i++) {
