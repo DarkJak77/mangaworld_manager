@@ -1,13 +1,21 @@
 const { app, BrowserWindow, ipcMain, dialog, shell } = require('electron')
 const path = require('path')
-const fs = require('fs')
-const request = require('request')
-const storage = require('./src/js/store.js')
+let fs = ''
+let request = ''
+let storage = require('./src/js/store.js')
 
 // Questo fa si che quando apri la versione "Squirrel", il programma non venga aperto 2 volte 
 if (require('electron-squirrel-startup')) return app.quit();
 
 let store = new storage()
+
+function end_load() {
+  fs = require('fs')
+  request = require('request')
+
+  // Il primo caricamente del file json
+  load()
+}
 
 // Funzione per il download
 const download = async (url, path, callback) => {
@@ -27,8 +35,25 @@ async function down() {
   if (store.download_list.length != 0) {
     let url = store.download_list[0].url
     let path = store.download_list[0].path
+
+    // SPERIMENTALE
+    let temp_name = path.split('\\')[path.split('\\').length -1].split('.')[0]
+
+    if ( Array.from('' + temp_name).length == 1) {
+      temp_name = '000' + temp_name
+    } else if (Array.from('' + temp_name).length == 2) {
+      temp_name = '00' + temp_name 
+    } else if (Array.from('' + temp_name).length == 3) {
+      temp_name = '0' + temp_name
+    }
+
+    let correct_path = path.replace(
+      path.split('\\')[path.split('\\').length -1] ,
+     temp_name + '.' + path.split('\\')[path.split('\\').length -1].split('.')[1]
+    )
+
     store.download_list.shift()
-    download(url, path, () => {
+    download(url, correct_path, () => {
       down()
     })
   } else {
@@ -48,9 +73,6 @@ function load() {
   store.json.data = JSON.parse(store.json.raw)
   store.json.raw = ''
 }
-
-// Il primo caricamente del file json
-load()
 
 // salva le modifiche al file json
 function save() {
@@ -86,9 +108,9 @@ JSON.sort = function (o) {
 function open_browser(type, link) {
   if (store.browser[type] == '') {
     if (type == 'volume') {
-      store.browser[type] = new invisibleWindow_volume(link)
+      store.browser[type] = new invisibleWindow(link, 'volume')
     } else {
-      store.browser[type] = new invisibleWindow_chapter(link)
+      store.browser[type] = new invisibleWindow(link, 'chapter')
     }
 
     store.browser[type]
@@ -225,9 +247,10 @@ class createWindow {
 }
 
 // questa classe gestisce la finestra che si occupa di controllare le pagine dei capitoli dei manga
-class invisibleWindow_chapter {
+class invisibleWindow {
 
-  constructor(link) {
+  constructor(link, mode) {
+
     this.win = new BrowserWindow({
       width: 800,
       height: 600,
@@ -235,39 +258,20 @@ class invisibleWindow_chapter {
       show: false,
 
       webPreferences: {
-        preload: path.join(__dirname, '\\src\\js\\preload\\preload_chapter.js')
+        preload: path.join(__dirname, '\\src\\js\\preload\\preload_' + mode + '.js')
       }
-    })
+    })  
 
-    if (link.includes('?style=list')) {
-      this.win.loadURL(link)
+
+    if (mode == 'chapter') {
+      if (link.includes('?style=list')) {
+        this.goto(link)
+      } else {
+        this.goto(link + '?style=list')
+      }
     } else {
-      this.win.loadURL(link + '?style=list')
+      this.goto(link)
     }
-  }
-
-  goto(link) {
-    this.win.loadURL(link)
-  }
-}
-
-// questa classe gestisce la finestra che si occapa di controllare la presenza di nuovi capitoli, 
-// reperire i link e aggiugnere ai preferiti
-class invisibleWindow_volume {
-
-  constructor(link) {
-    this.win = new BrowserWindow({
-      width: 800,
-      height: 600,
-      maximizable: true,
-      show: false,
-
-      webPreferences: {
-        preload: path.join(__dirname, '\\src\\js\\preload\\preload_volume.js')
-      }
-    })
-
-    this.win.loadURL(link)
   }
 
   goto(link) {
@@ -288,8 +292,10 @@ ipcMain.on('toMain', (event, ...args) => {
     title: 'mangaworld Manager',
   };
 
-
-  if (args[0].includes('*e_r_r_o_r*')) { // quando viene inserito un link non valido appare un messaggio di errore
+  if (args[0] == 'load') { // aumenta la velocità di avvio caricando le librerie in ritardo
+    event.reply('myRenderChannel', 'load')
+    end_load()
+  } else if (args[0].includes('*e_r_r_o_r*')) { // quando viene inserito un link non valido appare un messaggio di errore
 
     options.type = 'error'
     options.message = 'Please insert a valid mangaworld link'
@@ -525,7 +531,24 @@ ipcMain.on('toMain', (event, ...args) => {
       for (let i = 0; i < multi_task; i++) {
         let url = store.download_list[0].url
         let path = store.download_list[0].path
-        download(url, path, () => {
+
+        // SPERIMENTALE
+        let temp_name = path.split('\\')[path.split('\\').length -1].split('.')[0]
+
+        if ( Array.from('' + temp_name).length == 1) {
+          temp_name = '000' + temp_name
+        } else if (Array.from('' + temp_name).length == 2) {
+          temp_name = '00' + temp_name 
+        } else if (Array.from('' + temp_name).length == 3) {
+          temp_name = '0' + temp_name
+        }
+
+        let correct_path = path.replace(
+          path.split('\\')[path.split('\\').length -1] ,
+         temp_name + '.' + path.split('\\')[path.split('\\').length -1].split('.')[1]
+        )
+
+        download(url, correct_path, () => {
           down()
         })
         store.download_list.shift()
@@ -541,7 +564,8 @@ app.whenReady().then(() => {
 
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) {
-      createWindow()
+      store.browser.main = new createWindow()
+      store.browser.main
     }
   })
 

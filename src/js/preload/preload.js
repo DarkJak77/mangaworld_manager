@@ -1,12 +1,14 @@
 const { ipcRenderer, contextBridge } = require('electron');
-const path = require('path')
-const fs = require('fs')
 
 // questi sono gli unici canali validi per amandare messaggi dalla pagina principale alle secondarie e viceversa
 const validChannels = ["toMain", "myRenderChannel"];
 
 // questa funzione serve per aggiornare la taballe presente nella pagina principale con i manga aggiunti tra i preferiti
 function to_rend() {
+
+  const path = require('path')
+  const fs = require('fs')
+
   let json = {
     raw: '',
     data: ''
@@ -51,14 +53,18 @@ contextBridge.exposeInMainWorld(
 
 // crea la tabella quando la pagina main viene creata
 window.addEventListener('DOMContentLoaded', () => {
-  to_rend()
-  // cerca nuovi manga all'avvio
-  document.getElementsByClassName('basicInputButtonsHyperlinksAccentButtonHover7c2a7e63')[0].click()
+  ipcRenderer.send('toMain','load')
+  
 })
 
 // aggiorna la tabella a ogni variazione, fumetti aggiunti o rimossi
 ipcRenderer.on("myRenderChannel", (event, ...args) => {
-  if (args[0] == 'rend'){
+  if (args[0] == 'load') {
+    to_rend()
+    // cerca nuovi manga all'avvio
+    document.getElementsByClassName('basicInputButtonsHyperlinksAccentButtonHover7c2a7e63')[0].click()
+    
+  } else if (args[0] == 'rend'){
     to_rend()
   }
 })
