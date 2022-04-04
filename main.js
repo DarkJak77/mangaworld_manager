@@ -5,7 +5,7 @@ let request = ''
 let storage = require('./src/js/store.js')
 
 // Questo fa si che quando apri la versione "Squirrel", il programma non venga aperto 2 volte 
-if (require('electron-squirrel-startup')) return app.quit();
+// if (require('electron-squirrel-startup')) return app.quit();
 
 let store = new storage()
 
@@ -81,7 +81,7 @@ function save() {
   load()
 }
 
-// insieme alla funzione sottostante serve pe ordinare il file json per le key ( non è mai )
+// insieme alla funzione sottostante serve pe ordinare il file json per le key ( non è mia )
 function isObject(v) {
   return '[object Object]' === Object.prototype.toString.call(v);
 };

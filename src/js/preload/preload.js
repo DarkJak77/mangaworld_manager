@@ -40,9 +40,9 @@ contextBridge.exposeInMainWorld(
   // della pagina principale di un manga
   check: () => {
     let values = document.getElementsByClassName('hoverBorder631050db')[0].value
-    if (values.includes('https://www.mangaworld.io/manga/') && values.includes('/read/')) {
+    if (values.includes('https://www.mangaworld.in/manga/') && values.includes('/read/')) {
       return 'chapter_*' + values
-    } else if (values.includes('https://www.mangaworld.io/manga/')) {
+    } else if (values.includes('https://www.mangaworld.in/manga/')) {
       return 'volume_*' + values
     } else {
       return '*e_r_r_o_r*'
