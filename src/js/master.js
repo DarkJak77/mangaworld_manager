@@ -1,21 +1,15 @@
-function download() {
-    let value = window.api.check()
-    window.api.send('toMain', value)
+function show() {
+    window.api.send('toMain', 'show_*')
 }
 
-function add_to_fav() {
-    let value = window.api.check()
-    window.api.send('toMain', 'fav_*' + value)
+function hide() {
+    window.api.send('toMain', 'hide_*')
 }
 
-function check_new() {
-    window.api.send('toMain', 'check_new_*volume_*')
+function work() {
+    window.api.send('toMain','work')
 }
 
-function del(index) {
-    window.api.send('toMain', 'del_*' + index)
-}
-
-function how_to() {
-    window.api.send('toMain', 'how_to_*')
+function resume() {
+    window.api.send('toMain','resume')
 }
