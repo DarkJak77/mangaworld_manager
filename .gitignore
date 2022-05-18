@@ -3,3 +3,5 @@ node_modules
 out
 download
 old_version
+cookies.json
+config.json

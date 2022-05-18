@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain, dialog, session, Notification } = require('electron')
+const { app, BrowserWindow, ipcMain, dialog, session, Notification, shell } = require('electron')
 const path = require('path')
 const fs = require('fs')
 const sound = require("sound-play");
@@ -6,7 +6,7 @@ const pup = require('./src/js/pup')
 
 // easy edit value
 const site = 'https://www.mangaworld.in/'
-const class_fav = 'comics-flex justify-content-start bookmark'
+const class_fav = 'entry vertical bookmark'
 
 
 
@@ -20,8 +20,7 @@ const app_title = 'MangaWorld Manager'
 
 var browser = ''
 let main_page = ''
-
-let slave = ''
+let option_page = ''
 
 let tmp = {}
 
@@ -32,12 +31,25 @@ let options = {
 };
 
 
+// must 
 ipcMain.on('toMain', (event, ...args) => {
   if (args[0] == 'show_*') {
     browser.show()
 
   } else if (args[0] == 'hide_*') {
     browser.hide()
+
+  } else if (args[0] == 'option_*') {
+
+    options.defaultId = 2,
+
+
+    options.buttons = ['Option', 'Developer Page', 'Exit']
+    options.message =
+      'OPTION: \n- Is above this text\n' +
+      'DEVELOPER PAGE: \n- Click on that button to open developer page\n'
+
+    main_page.dialog(options,() => {call_option()})
 
   }
 })
@@ -70,38 +82,97 @@ ipcMain.on('toMain', (event, ...args) => {
 
 */
 
+// login and register
 ipcMain.on('toMain', (event, ...args) => {
   if (args[0] == 'load_slave' && account == 0) {
 
-    if (browser.check_page() == ( site + 'login' )) {
+    if (browser.check_page() == (site + 'login')) {
       console.log('not logged')
 
-      dialog.showMessageBox(null, { type: 'info', title: 'MangaWorld Manager', 
-      message: 'Benenuto! \nCome prima cosa collega il tuo Account \nSe non ne hai uno Crealo! ' })
+      dialog.showMessageBox(null, {
+        type: 'info', title: 'MangaWorld Manager',
+        message: 'Benenuto! \nCome prima cosa collega il tuo Account \nSe non ne hai uno Crealo! '
+      })
 
       browser.show()
 
-    } else if (browser.check_page().includes('bookmarks') ) {
+    } else if (browser.check_page().includes('bookmarks')) {
       account = 1
       browser.saveCookie()
 
       browser.hide()
-      browser.send('check_fav_*comics-flex justify-content-start bookmark')
+      browser.send('check_fav_*' + class_fav)
 
-      
-    } else if (browser.check_page() == ( site + 'register' )) {
+
+    } else if (browser.check_page() == (site + 'register')) {
       //none
-      
+
     } else {
-      browser.goto(site + 'bookmarks' )
-    
+      browser.goto(site + 'bookmarks')
+
     }
 
   }
 })
 
+
+// render page to main
 ipcMain.on('toMain', (event, ...args) => {
-  console.log(args[0])
+  if (String(args[0]).includes('dict_*')) {
+    main_page.send(args[0])
+
+  }
+
+})
+
+
+// option page 
+ipcMain.on('toMain', (event, ...args) => {
+  if ( args[0] == 'load_option') {
+
+    if (! (fs.existsSync(path.join(__dirname, '/src/config/config.json'))) ) {
+
+      let option_generator = {
+        'auto_update_on_start' : false,
+        'complete_skip' : false,
+        'drop_skip' : false,
+        'stop_skip' : false,
+        'to_read' : false
+      }
+
+      fs.writeFileSync(path.join(__dirname, '/src/config/config.json'),JSON.stringify(option_generator))
+
+    } 
+
+    let option_file = fs.readFileSync(path.join(__dirname, '/src/config/config.json'))
+
+    option_page.send('option_file_*' + option_file)
+
+  } else if ( String(args[0]).includes('save_option_*') ) {
+
+    fs.writeFileSync(path.join(__dirname, '/src/config/config.json'), args[0].split('_*')[1] )
+
+    dialog.showMessageBox(null, {
+      type: 'info', title: 'MangaWorld Manager',
+      message: 'Preferenze salvate con successo!'
+    })
+
+  }
+
+})
+
+// debug show message
+ipcMain.on('toMain', (event, ...args) => {
+
+  
+  if ( String( (args[0]) ).includes('db_*')  ) {
+
+     console.log(args[0]) 
+
+  }
+  
+  //console.log(args[0]) 
+  
 })
 
 
@@ -132,7 +203,7 @@ class createWindow {
 
       if (dev == 1) {
         this.win.resizable = true,
-        this.win.fullscreenable = true
+          this.win.fullscreenable = true
         //this.win.webContents.openDevTools();
       }
 
@@ -145,7 +216,7 @@ class createWindow {
       this.win.loadFile('src/web/index.html')
 
     } else if (this.mode == 'slave') {
- 
+
       this.win = new BrowserWindow({
         width: 800,
         height: 800,
@@ -154,9 +225,33 @@ class createWindow {
 
         webPreferences: {
           preload: path.join(__dirname, '/src/js/preload/preload_slave.js')
-        } 
+        }
 
       })
+      this.win.setPosition(500, 0)
+
+      if (dev == 1) {
+        this.win.resizable = true,
+          this.win.fullscreenable = true
+        //this.win.webContents.openDevTools();
+      }
+
+    } else if (this.mode == 'option') {
+
+      this.win = new BrowserWindow({
+        title: app_title + '- Option Page',
+        width: 400,
+        height: 275,
+        maximizable: false,
+        show: true,
+
+        webPreferences: {
+          preload: path.join(__dirname, '/src/js/preload/preload_option.js')
+        }
+
+      })
+      
+      this.win.setMenu(null)
       this.win.setPosition(500, 0)
 
       if (dev == 1) {
@@ -165,14 +260,21 @@ class createWindow {
         //this.win.webContents.openDevTools();
       }
 
+      this.win.loadFile('src/web/option.html')
+
     }
 
+    if (this.mode != 'option') {
 
-    this.win.on('close', (event) => {
+      this.win.on('close', (event) => {
 
       this.confirmAndQuit(event)
 
     })
+
+    }
+
+    
 
   }
 
@@ -203,8 +305,10 @@ class createWindow {
       app.quit()
 
     } else {
+
       if (this.mode == 'slave') {
         this.hide()
+
       } else {
         //show the dialog
         dialog.showMessageBox(this.win, messageBoxOptions)
@@ -231,13 +335,40 @@ class createWindow {
   }
 
   // usata per il menù delle opzioni
-  dialog(option) {
+  dialog(option, fn_1, fn_2, fn_3) {
     dialog.showMessageBox(this.win, option)
       .then(result => {
         if (result.response === 0) {
+          if ( fn_1 != undefined ) {
+            fn_1()
+
+          } else {
+            //
+
+          } 
 
         } else if (result.response === 1) {
-          shell.openExternal('https://github.com/DarkJak77/')
+          // Usually Developer Page Button
+
+          if ( fn_2 != undefined ) {
+            fn_2()
+
+          } else {
+            shell.openExternal('https://github.com/DarkJak77/')
+
+          } 
+
+        } else if (result.response === 2) {
+          // Usually Exit Button
+
+          if ( fn_3 != undefined ) {
+            fn_3()
+
+          } else {
+            //
+
+          }
+
         }
       }
       )
@@ -275,7 +406,7 @@ class createWindow {
   }
 
   goto(link) {
-    this.win.loadURL(link,{userAgent:'Mozilla/5.0 (Linux; Android 10) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.41 Mobile Safari/537.36'})
+    this.win.loadURL(link)//, { userAgent: 'Mozilla/5.0 (Linux; Android 10) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.41 Mobile Safari/537.36' })
   }
 
   delete_cookies() {
@@ -294,7 +425,7 @@ class createWindow {
         this.cookies = JSON.parse(this.cookiesString);
         this.cookies.map((cookie) => session.defaultSession.cookies.set(cookie)
           .then(
-           () => {}
+            () => { }
           )
           .catch(
             (e) => console.log(e)
@@ -352,13 +483,20 @@ class createWindow {
 
 }
 
+function call_option() {
+  option_page = new createWindow('option')
+  option_page
+
+}
+
+
 app.whenReady().then(() => {
   main_page = new createWindow('master')
   browser = new createWindow('slave')
   main_page
   browser
 
-  
+
   browser.load_coockie()
   browser.goto(site + 'bookmarks')
 
@@ -369,9 +507,9 @@ app.whenReady().then(() => {
       main_page
       browser
 
-      
+
       browser.load_coockie()
-      browser.goto(site + 'bookmarks')  
+      browser.goto(site + 'bookmarks')
 
     }
   })

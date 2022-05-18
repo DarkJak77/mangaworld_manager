@@ -28,6 +28,7 @@
     "electron-osx-prompt": "^1.4.1",
     "electron-squirrel-startup": "^1.0.0",
     "puppeteer": "^13.7.0",
+    "shell": "^0.9.4",
     "sound-play": "^1.1.0"
   },
   "config": {
