@@ -18,6 +18,7 @@ let option_page = ''
 // easy edit value
 const site = 'https://www.mangaworld.in/'
 const class_fav = 'entry vertical bookmark'
+const chapter_class = 'chapter'
 let config = {
   'auto_update_on_start' : false,
   'complete_skip' : false,
@@ -37,6 +38,7 @@ const dev = 1;
 
 let database = {}
 let tmp = ''
+let command = ''
 
 // for message
 let options = {
@@ -50,7 +52,10 @@ let options = {
 
 // must 
 ipcMain.on('toMain', (event, ...args) => {
-  if (args[0] == 'show_*') {
+  if ( args[0] == 'load') {
+    load_opt()
+
+  } else if (args[0] == 'show_*') {
     browser_page.show()
 
   } else if (args[0] == 'hide_*') {
@@ -129,6 +134,11 @@ ipcMain.on('toMain', (event, ...args) => {
 
     }
 
+  } else if (args[0] == 'load_slave' && account == 1 && command == 'check_last_chapter' ) {
+
+    browser_page.send('check_last_chapter_*' + chapter_class)
+    command = ''
+
   }
 })
 
@@ -150,20 +160,13 @@ ipcMain.on('toMain', (event, ...args) => {
 ipcMain.on('toMain', (event, ...args) => {
   if ( args[0] == 'load_option') {
 
-    if (! (fs.existsSync(path.join(__dirname, '/src/config/config.json'))) ) {
-
-      fs.writeFileSync(path.join(__dirname, '/src/config/config.json'),JSON.stringify(config))
-
-    } else {
-
-      config = JSON.parse( fs.readFileSync(path.join(__dirname, '/src/config/config.json')) )
-
-    }
+    load_opt()
 
     option_page.send('option_file_*' + JSON.stringify( config ) )
 
   } else if ( String(args[0]).includes('save_option_*') ) {
 
+    config = JSON.parse( args[0].split('_*')[1] )
     fs.writeFileSync(path.join(__dirname, '/src/config/config.json'), args[0].split('_*')[1] )
 
     dialog.showMessageBox(null, {
@@ -177,32 +180,27 @@ ipcMain.on('toMain', (event, ...args) => {
 
 ipcMain.on('toMain', (event, ...args) => {
 
-  
-  if ( (args[0]) == 'update_*' ) {
+  if ((args[0]) == 'update_*') {
 
     tmp = []
 
-    // DA CONTROLLARE!!!
-
     database.map(
+
       (manga) => {
 
-        console.log(tmp.length)
-        console.log(manga.status)
-
-        if(config.complete_skip == true && manga.status == 'complete') {
+        if (config.complete_skip == true && manga.status == 'complete') {
           //
 
-        } else if(config.drop_skip == true && manga.status == 'drop') {
+        } else if (config.drop_skip == true && manga.status == 'drop') {
           //
 
-        } else if(config.stop_skip == true && manga.status == 'stop') {
+        } else if (config.stop_skip == true && manga.status == 'stop') {
           //
 
-        } else if(config.complete_skip == true && manga.status == 'complete') {
+        } else if (config.complete_skip == true && manga.status == 'complete') {
           //
 
-        } else if(config.to_read_skip == true && manga.status == 'to_read') {
+        } else if (config.to_read_skip == true && manga.status == 'to_read') {
           //
 
         } else {
@@ -212,23 +210,37 @@ ipcMain.on('toMain', (event, ...args) => {
 
       }
 
-     )
 
-     console.log(tmp.length)
+    )
 
-    console.log(tmp.length)
+    check_last_chapter()
 
+  } else if ( String(args[0]).includes('check_last_chapter_result_*') ) {
+    let to_find = tmp[0].title
+
+    database.map(
+      (manga,index) => {
+
+        if(manga.title == to_find) {
+          database[index].last_chapter = args[0].split('_*')[1]
+
+        }
+
+      }
+
+    )
+
+    tmp.shift()
+    check_last_chapter()
   }
-  
-  //console.log(args[0]) 
-  
+
 })
 
 // debug show message
 ipcMain.on('toMain', (event, ...args) => {
 
   
-  if ( String( (args[0]) ).includes('db_*')  ) {
+  if ( String( args[0] ).includes('db_*')  ) {
 
      console.log(args[0]) 
 
@@ -238,6 +250,35 @@ ipcMain.on('toMain', (event, ...args) => {
   
 })
 
+
+
+function check_last_chapter() {
+
+    if ( tmp.length != 0 ) {
+
+      command = 'check_last_chapter'
+      browser_page.goto( tmp[0].link )
+
+    } else {
+      main_page.send('dict_*' + JSON.stringify(database))
+
+    }
+
+}
+
+function load_opt() {
+
+  if (! (fs.existsSync(path.join(__dirname, '/src/config/config.json'))) ) {
+
+    fs.writeFileSync(path.join(__dirname, '/src/config/config.json'),JSON.stringify(config))
+
+  } else {
+
+    config = JSON.parse( fs.readFileSync(path.join(__dirname, '/src/config/config.json')) )
+
+  }
+
+}
 
 class createWindow {
 
