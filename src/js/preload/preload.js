@@ -7,8 +7,9 @@ let database = ''
 
 const manga_format = `<div class='{title}'>
                       <p><img src="{img}" width="300" height="300"></p><p><a href="{link}" target="_blank" rel="noopener noreferrer">{title}</a></p>
-                      <p>{last_chapter}</p>
+                      <p>{last_read}</p>
                       <p>{status}</p>
+                      <p>{last_chapter}</p>
                       </div>`
 
 
@@ -83,10 +84,12 @@ function rebuild_data(data) {
       rebuilded_data += manga_format
       .replace( '{title}' , manga.title )
       .replace( '{title}' , manga.title )
+      .replace( '{title}' , manga.title )
       .replace( '{link}' , manga.link )
       .replace( '{img}' , manga.img )
-      .replace( '{last_chapter}' , manga.last_chapter )
+      .replace( '{last_read}' , manga.last_read )
       .replace( '{status}' , manga.status )
+      .replace( '{last_chapter}', manga.last_chapter )
 
     }
 

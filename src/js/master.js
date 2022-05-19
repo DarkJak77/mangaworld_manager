@@ -13,6 +13,11 @@ function option() {
 
 }
 
+function update() {
+    window.api.send('toMain', 'update_*')
+
+}
+
 function rend() {
     const select = document.getElementsByClassName('show_choice')[0]
     const option = Array.from(select).filter(

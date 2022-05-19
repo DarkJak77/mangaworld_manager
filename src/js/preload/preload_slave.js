@@ -12,7 +12,6 @@ let dict = [
 ]
 
 
-
 // when page is loaded
 window.addEventListener('DOMContentLoaded', () => {
   ipcRenderer.send('toMain', 'load_slave')
@@ -43,13 +42,13 @@ ipcRenderer.on("myRenderChannel", (event, ...args) => {
         to_add['img'] = Array.from(manga.getElementsByTagName('img')).filter((img) => img.src != '')[0].src
         //to_add['img'] = manga.firstChild.firstChild.src
 
-        let pre_last_chapter = Array.from(manga.getElementsByClassName('latest-chapter'))
+        let pre_last_read = Array.from(manga.getElementsByClassName('latest-chapter'))
 
-        if (pre_last_chapter.length != 0) {
-          to_add['last_chapter'] = pre_last_chapter[0].innerText.split(': ')[1]
+        if (pre_last_read.length != 0) {
+          to_add['last_read'] = pre_last_read[0].innerText.split(': ')[1]
 
-        } else if (pre_last_chapter.length == 0) {
-          to_add['last_chapter'] = 'null'
+        } else if (pre_last_read.length == 0) {
+          to_add['last_read'] = 'null'
 
         }
 
@@ -72,6 +71,8 @@ ipcRenderer.on("myRenderChannel", (event, ...args) => {
           to_add['status'] = 'drop'
 
         }
+
+        to_add['last_chapter'] = ''
 
         dict.push(to_add)
 

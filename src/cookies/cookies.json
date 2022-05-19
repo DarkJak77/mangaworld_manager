@@ -8,7 +8,7 @@
     "secure": false,
     "httpOnly": false,
     "session": false,
-    "expirationDate": 1715980840,
+    "expirationDate": 1716048247,
     "sameSite": "unspecified",
     "url": "https://www.mangaworld.in/bookmarks/6071e867b74a270a28c6c9db"
   },
@@ -21,7 +21,7 @@
     "secure": false,
     "httpOnly": true,
     "session": false,
-    "expirationDate": 1684444815.046049,
+    "expirationDate": 1684512246.980071,
     "sameSite": "unspecified",
     "url": "https://www.mangaworld.in/bookmarks/6071e867b74a270a28c6c9db"
   },
@@ -34,7 +34,7 @@
     "secure": false,
     "httpOnly": false,
     "session": false,
-    "expirationDate": 1652995240,
+    "expirationDate": 1653062647,
     "sameSite": "unspecified",
     "url": "https://www.mangaworld.in/bookmarks/6071e867b74a270a28c6c9db"
   },
@@ -65,30 +65,6 @@
     "url": "https://www.mangaworld.in/bookmarks/6071e867b74a270a28c6c9db"
   },
   {
-    "name": "_csrf",
-    "value": "DZcjC6OdEwD6iu9j2_LNKImm",
-    "domain": ".www.mangaworld.in",
-    "hostOnly": false,
-    "path": "/",
-    "secure": false,
-    "httpOnly": false,
-    "session": true,
-    "sameSite": "unspecified",
-    "url": "https://www.mangaworld.in/bookmarks/6071e867b74a270a28c6c9db"
-  },
-  {
-    "name": "_csrf",
-    "value": "xUdZjB5al8PRBTNQhXKPIPIY",
-    "domain": "www.mangaworld.in",
-    "hostOnly": true,
-    "path": "/",
-    "secure": false,
-    "httpOnly": false,
-    "session": true,
-    "sameSite": "unspecified",
-    "url": "https://www.mangaworld.in/bookmarks/6071e867b74a270a28c6c9db"
-  },
-  {
     "name": "connect.sid",
     "value": "s%3ABQ6k2E9rtgSeDINMOGxRbwQG60z7wDkq.yzXDxA%2BqygGV9u2M4TxeOYZu%2BnPuphT2GNgNgzHZOIg",
     "domain": "www.mangaworld.in",
@@ -97,20 +73,19 @@
     "secure": false,
     "httpOnly": true,
     "session": false,
-    "expirationDate": 1684444839.113064,
+    "expirationDate": 1684512382.329932,
     "sameSite": "unspecified",
     "url": "https://www.mangaworld.in/bookmarks/6071e867b74a270a28c6c9db"
   },
   {
-    "name": "_gat_gtag_UA_93961448_2",
-    "value": "1",
-    "domain": ".mangaworld.in",
+    "name": "_csrf",
+    "value": "880HIspsvzlodgROVllKb_tQ",
+    "domain": ".www.mangaworld.in",
     "hostOnly": false,
     "path": "/",
     "secure": false,
     "httpOnly": false,
-    "session": false,
-    "expirationDate": 1652908899,
+    "session": true,
     "sameSite": "unspecified",
     "url": "https://www.mangaworld.in/bookmarks/6071e867b74a270a28c6c9db"
   }

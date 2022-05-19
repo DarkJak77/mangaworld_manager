@@ -4,9 +4,28 @@ const fs = require('fs')
 const sound = require("sound-play");
 const pup = require('./src/js/pup')
 
+
+
+const app_title = 'MangaWorld Manager'
+
+// window 
+let main_page = ''
+let browser_page = ''
+let option_page = ''
+
+
+
 // easy edit value
 const site = 'https://www.mangaworld.in/'
 const class_fav = 'entry vertical bookmark'
+let config = {
+  'auto_update_on_start' : false,
+  'complete_skip' : false,
+  'drop_skip' : false,
+  'stop_skip' : false,
+  'to_read_skip' : false
+}
+
 
 
 
@@ -16,14 +35,10 @@ let account = 0
 // for fullscreen and resizable
 const dev = 1;
 
-const app_title = 'MangaWorld Manager'
+let database = {}
+let tmp = ''
 
-var browser = ''
-let main_page = ''
-let option_page = ''
-
-let tmp = {}
-
+// for message
 let options = {
   type: 'info',
   title: app_title,
@@ -31,13 +46,15 @@ let options = {
 };
 
 
+
+
 // must 
 ipcMain.on('toMain', (event, ...args) => {
   if (args[0] == 'show_*') {
-    browser.show()
+    browser_page.show()
 
   } else if (args[0] == 'hide_*') {
-    browser.hide()
+    browser_page.hide()
 
   } else if (args[0] == 'option_*') {
 
@@ -86,7 +103,7 @@ ipcMain.on('toMain', (event, ...args) => {
 ipcMain.on('toMain', (event, ...args) => {
   if (args[0] == 'load_slave' && account == 0) {
 
-    if (browser.check_page() == (site + 'login')) {
+    if (browser_page.check_page() == (site + 'login')) {
       console.log('not logged')
 
       dialog.showMessageBox(null, {
@@ -94,21 +111,21 @@ ipcMain.on('toMain', (event, ...args) => {
         message: 'Benenuto! \nCome prima cosa collega il tuo Account \nSe non ne hai uno Crealo! '
       })
 
-      browser.show()
+      browser_page.show()
 
-    } else if (browser.check_page().includes('bookmarks')) {
+    } else if (browser_page.check_page().includes('bookmarks')) {
       account = 1
-      browser.saveCookie()
+      browser_page.saveCookie()
 
-      browser.hide()
-      browser.send('check_fav_*' + class_fav)
+      browser_page.hide()
+      browser_page.send('check_fav_*' + class_fav)
 
 
-    } else if (browser.check_page() == (site + 'register')) {
+    } else if (browser_page.check_page() == (site + 'register')) {
       //none
 
     } else {
-      browser.goto(site + 'bookmarks')
+      browser_page.goto(site + 'bookmarks')
 
     }
 
@@ -119,6 +136,9 @@ ipcMain.on('toMain', (event, ...args) => {
 // render page to main
 ipcMain.on('toMain', (event, ...args) => {
   if (String(args[0]).includes('dict_*')) {
+
+    database = JSON.parse( args[0].split('_*')[1] )
+
     main_page.send(args[0])
 
   }
@@ -132,21 +152,15 @@ ipcMain.on('toMain', (event, ...args) => {
 
     if (! (fs.existsSync(path.join(__dirname, '/src/config/config.json'))) ) {
 
-      let option_generator = {
-        'auto_update_on_start' : false,
-        'complete_skip' : false,
-        'drop_skip' : false,
-        'stop_skip' : false,
-        'to_read' : false
-      }
+      fs.writeFileSync(path.join(__dirname, '/src/config/config.json'),JSON.stringify(config))
 
-      fs.writeFileSync(path.join(__dirname, '/src/config/config.json'),JSON.stringify(option_generator))
+    } else {
 
-    } 
+      config = JSON.parse( fs.readFileSync(path.join(__dirname, '/src/config/config.json')) )
 
-    let option_file = fs.readFileSync(path.join(__dirname, '/src/config/config.json'))
+    }
 
-    option_page.send('option_file_*' + option_file)
+    option_page.send('option_file_*' + JSON.stringify( config ) )
 
   } else if ( String(args[0]).includes('save_option_*') ) {
 
@@ -159,6 +173,55 @@ ipcMain.on('toMain', (event, ...args) => {
 
   }
 
+})
+
+ipcMain.on('toMain', (event, ...args) => {
+
+  
+  if ( (args[0]) == 'update_*' ) {
+
+    tmp = []
+
+    // DA CONTROLLARE!!!
+
+    database.map(
+      (manga) => {
+
+        console.log(tmp.length)
+        console.log(manga.status)
+
+        if(config.complete_skip == true && manga.status == 'complete') {
+          //
+
+        } else if(config.drop_skip == true && manga.status == 'drop') {
+          //
+
+        } else if(config.stop_skip == true && manga.status == 'stop') {
+          //
+
+        } else if(config.complete_skip == true && manga.status == 'complete') {
+          //
+
+        } else if(config.to_read_skip == true && manga.status == 'to_read') {
+          //
+
+        } else {
+          tmp.push(manga)
+
+        }
+
+      }
+
+     )
+
+     console.log(tmp.length)
+
+    console.log(tmp.length)
+
+  }
+  
+  //console.log(args[0]) 
+  
 })
 
 // debug show message
@@ -318,7 +381,7 @@ class createWindow {
               session.defaultSession.clearStorageData((data) => { })
 
               this.close = true
-              browser.close = true
+              browser_page.close = true
               app.quit()
 
             }
@@ -492,24 +555,24 @@ function call_option() {
 
 app.whenReady().then(() => {
   main_page = new createWindow('master')
-  browser = new createWindow('slave')
+  browser_page = new createWindow('slave')
   main_page
-  browser
+  browser_page
 
 
-  browser.load_coockie()
-  browser.goto(site + 'bookmarks')
+  browser_page.load_coockie()
+  browser_page.goto(site + 'bookmarks')
 
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) {
       main_page = new createWindow('master')
-      browser = new createWindow('slave')
+      browser_page = new createWindow('slave')
       main_page
-      browser
+      browser_page
 
 
-      browser.load_coockie()
-      browser.goto(site + 'bookmarks')
+      browser_page.load_coockie()
+      browser_page.goto(site + 'bookmarks')
 
     }
   })
