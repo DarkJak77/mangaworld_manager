@@ -62,6 +62,8 @@ ipcRenderer.on("myRenderChannel", (event, ...args) => {
 ipcRenderer.on("myRenderChannel", (event, ...args) => {
   if ( String(args[0]).includes('dict_*') ) {
     
+    console.log(args[0])
+
     database = JSON.parse( String(args[0]).split('dict_*')[1] )
 
     rebuild_data( database )    

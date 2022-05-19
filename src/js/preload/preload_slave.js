@@ -16,13 +16,14 @@ let dict = [
 window.addEventListener('DOMContentLoaded', () => {
   ipcRenderer.send('toMain', 'load_slave')
 
+
 })
 
 
 ipcRenderer.on("myRenderChannel", (event, ...args) => {
   if (args[0] == 'load') {
 
-  } else if (args[0].includes('check_fav_*')) {
+  } else if (String(args[0]).includes('check_fav_*')) {
 
     let fav = document.getElementsByClassName(args[0].split('_*')[1])
 
@@ -86,3 +87,20 @@ ipcRenderer.on("myRenderChannel", (event, ...args) => {
 
 })
 
+
+
+ipcRenderer.on("myRenderChannel", (event, ...args) => {
+  if (String(args[0]).includes('check_last_chapter_*')) {
+
+
+    let info_chapter = document.getElementsByClassName( args[0].split('_*')[1] )[0]
+    
+    let to_return = Array.from(info_chapter.getElementsByTagName('span')).filter(
+      (span) => span.innerText != ''
+    )[0]
+
+    ipcRenderer.send('toMain', 'check_last_chapter_result_*' + to_return.innerText)
+
+  } 
+
+})
