@@ -1,5 +1,18 @@
 [
   {
+    "name": "connect.sid",
+    "value": "s%3ABQ6k2E9rtgSeDINMOGxRbwQG60z7wDkq.yzXDxA%2BqygGV9u2M4TxeOYZu%2BnPuphT2GNgNgzHZOIg",
+    "domain": "www.mangaworld.in",
+    "hostOnly": true,
+    "path": "/",
+    "secure": false,
+    "httpOnly": true,
+    "session": false,
+    "expirationDate": 1684593798.096329,
+    "sameSite": "unspecified",
+    "url": "https://www.mangaworld.in/bookmarks/6071e867b74a270a28c6c9db"
+  },
+  {
     "name": "_ga",
     "value": "GA1.2.966209004.1652477675",
     "domain": ".mangaworld.in",
@@ -8,7 +21,7 @@
     "secure": false,
     "httpOnly": false,
     "session": false,
-    "expirationDate": 1716072836,
+    "expirationDate": 1716127658,
     "sameSite": "unspecified",
     "url": "https://www.mangaworld.in/bookmarks/6071e867b74a270a28c6c9db"
   },
@@ -21,7 +34,7 @@
     "secure": false,
     "httpOnly": true,
     "session": false,
-    "expirationDate": 1684536997.942638,
+    "expirationDate": 1684592357.606354,
     "sameSite": "unspecified",
     "url": "https://www.mangaworld.in/bookmarks/6071e867b74a270a28c6c9db"
   },
@@ -34,21 +47,8 @@
     "secure": false,
     "httpOnly": false,
     "session": false,
-    "expirationDate": 1653087236,
+    "expirationDate": 1653142058,
     "sameSite": "unspecified",
-    "url": "https://www.mangaworld.in/bookmarks/6071e867b74a270a28c6c9db"
-  },
-  {
-    "name": "euconsent-v2",
-    "value": "CPZKLnGPZKLnGAKAXAITCPCsAP_AAH_AAAwIIwtd_X__bX9j-_5_bft0eY1P9_r3_-QzjhfNs-8F3L_W_L0Xw2E7NF36pq4KuR4Eu3LBIQNlHMHUTUmwaokVrzHsak2cpyNKJ7LEknMZO2dYGH9Pn9lDuYKY7_5___bx3D-v_t_-39T378Xf3_d5_2_--vCfV599jbn9fV_7_9nP___9v-_8_________giyASYal5AF2JY4MmkaRQogRhWEhVAoAKKAYWiKwAcHBTsrAJdQQsAEAqAjAiBBiCjBgEAAgEASERASAFggEQBEAgABAAiAQgAImAQWAFgYBAAKAaFiAFAAIEhBkQERymBARIlFBLZWIJQV7GmEAdZYAUCiMioAESAAAkBASFg5jgCQEuFkgSYoXyAEYIAA.YAAAAAAAAAAA",
-    "domain": ".www.mangaworld.in",
-    "hostOnly": false,
-    "path": "/",
-    "secure": true,
-    "httpOnly": false,
-    "session": false,
-    "expirationDate": 1686518678.480445,
-    "sameSite": "lax",
     "url": "https://www.mangaworld.in/bookmarks/6071e867b74a270a28c6c9db"
   },
   {
@@ -65,27 +65,27 @@
     "url": "https://www.mangaworld.in/bookmarks/6071e867b74a270a28c6c9db"
   },
   {
+    "name": "euconsent-v2",
+    "value": "CPZKLnGPZKLnGAKAXAITCPCsAP_AAH_AAAwIIwtd_X__bX9j-_5_bft0eY1P9_r3_-QzjhfNs-8F3L_W_L0Xw2E7NF36pq4KuR4Eu3LBIQNlHMHUTUmwaokVrzHsak2cpyNKJ7LEknMZO2dYGH9Pn9lDuYKY7_5___bx3D-v_t_-39T378Xf3_d5_2_--vCfV599jbn9fV_7_9nP___9v-_8_________giyASYal5AF2JY4MmkaRQogRhWEhVAoAKKAYWiKwAcHBTsrAJdQQsAEAqAjAiBBiCjBgEAAgEASERASAFggEQBEAgABAAiAQgAImAQWAFgYBAAKAaFiAFAAIEhBkQERymBARIlFBLZWIJQV7GmEAdZYAUCiMioAESAAAkBASFg5jgCQEuFkgSYoXyAEYIAA.YAAAAAAAAAAA",
+    "domain": ".www.mangaworld.in",
+    "hostOnly": false,
+    "path": "/",
+    "secure": true,
+    "httpOnly": false,
+    "session": false,
+    "expirationDate": 1686518678.480445,
+    "sameSite": "lax",
+    "url": "https://www.mangaworld.in/bookmarks/6071e867b74a270a28c6c9db"
+  },
+  {
     "name": "_csrf",
-    "value": "yKTeu0WSg0XPBVQ_FyZ9tqJ-",
+    "value": "wfVqOTy3PzXByjex_x-0LGLx",
     "domain": ".www.mangaworld.in",
     "hostOnly": false,
     "path": "/",
     "secure": false,
     "httpOnly": false,
     "session": true,
-    "sameSite": "unspecified",
-    "url": "https://www.mangaworld.in/bookmarks/6071e867b74a270a28c6c9db"
-  },
-  {
-    "name": "connect.sid",
-    "value": "s%3ABQ6k2E9rtgSeDINMOGxRbwQG60z7wDkq.yzXDxA%2BqygGV9u2M4TxeOYZu%2BnPuphT2GNgNgzHZOIg",
-    "domain": "www.mangaworld.in",
-    "hostOnly": true,
-    "path": "/",
-    "secure": false,
-    "httpOnly": true,
-    "session": false,
-    "expirationDate": 1684537034.406921,
     "sameSite": "unspecified",
     "url": "https://www.mangaworld.in/bookmarks/6071e867b74a270a28c6c9db"
   }

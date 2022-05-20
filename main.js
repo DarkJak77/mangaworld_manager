@@ -6,7 +6,10 @@ const pup = require('./src/js/pup')
 
 
 
-const app_title = 'MangaWorld Manager'
+
+/*
+BROWSER VARIABLES
+*/
 
 // window 
 let main_page = ''
@@ -15,7 +18,13 @@ let option_page = ''
 
 
 
+
+/*
+VARIABLES
+*/
+
 // easy edit value
+const app_title = 'MangaWorld Manager'
 const site = 'https://www.mangaworld.in/'
 const class_fav = 'entry vertical bookmark'
 const chapter_class = 'chapter'
@@ -27,9 +36,6 @@ let config = {
   'to_read_skip' : false
 }
 
-
-
-
 // 0 = no account / 1 = account
 let account = 0
 
@@ -39,6 +45,8 @@ const dev = 1;
 let database = {}
 let tmp = ''
 let command = ''
+let working = 0
+let work_time = 1
 
 // for message
 let options = {
@@ -49,6 +57,10 @@ let options = {
 
 
 
+
+/*
+LISTENER
+*/
 
 // must 
 ipcMain.on('toMain', (event, ...args) => {
@@ -75,34 +87,6 @@ ipcMain.on('toMain', (event, ...args) => {
 
   }
 })
-
-
-// to send message use:
-// dialog.showMessageBox(null, options)
-
-/* to send sistem notification 
-
-sound.play(path.join(__dirname, 'src/tmp/zuccotto.mp3'))
-new Notification({
-  title: options.title,
-  body: 'STOP'
-}).show();
-
-*/
-
-/*
-
-base 
-
-ipcMain.on('toMain', (event, ...args) => {
-  if (args[0] == 'test') {
-    console.log(args[0])
-
-  }
-})
-
-
-*/
 
 // login and register
 ipcMain.on('toMain', (event, ...args) => {
@@ -142,7 +126,6 @@ ipcMain.on('toMain', (event, ...args) => {
   }
 })
 
-
 // render page to main
 ipcMain.on('toMain', (event, ...args) => {
   if (String(args[0]).includes('dict_*')) {
@@ -151,10 +134,14 @@ ipcMain.on('toMain', (event, ...args) => {
 
     main_page.send(args[0])
 
+    if ( config.auto_update_on_start == true ) {
+      update_manga()
+
+    }
+
   }
 
 })
-
 
 // option page 
 ipcMain.on('toMain', (event, ...args) => {
@@ -178,11 +165,61 @@ ipcMain.on('toMain', (event, ...args) => {
 
 })
 
+// update 
 ipcMain.on('toMain', (event, ...args) => {
 
   if ((args[0]) == 'update_*') {
 
-    tmp = []
+    update_manga()
+
+  } else if ( String(args[0]).includes('check_last_chapter_result_*') ) {
+
+    check_last_chapter_result(args[0].split('_*')[1])
+
+  }
+
+})
+
+// debug show message
+ipcMain.on('toMain', (event, ...args) => {
+  
+  if ( String( args[0] ).includes('db_*')  ) {
+
+     console.log(args[0]) 
+
+  }
+  
+})
+
+
+
+
+/*
+FUNCTION
+*/
+
+function load_opt() {
+
+  if (! (fs.existsSync(path.join(__dirname, '/src/config/config.json'))) ) {
+
+    fs.writeFileSync(path.join(__dirname, '/src/config/config.json'),JSON.stringify(config))
+
+  } else {
+
+    config = JSON.parse( fs.readFileSync(path.join(__dirname, '/src/config/config.json')) )
+
+  }
+
+}
+
+function call_option() {
+  option_page = new createWindow('option')
+  option_page
+
+}
+
+function update_manga() {
+  tmp = []
 
     database.map(
 
@@ -212,17 +249,39 @@ ipcMain.on('toMain', (event, ...args) => {
 
 
     )
+    
+    working = tmp.length
+    main_page.progress(work_time,working)
 
     check_last_chapter()
 
-  } else if ( String(args[0]).includes('check_last_chapter_result_*') ) {
-    let to_find = tmp[0].title
+}
+
+function check_last_chapter() {
+
+  if ( tmp.length != 0 ) {
+
+    command = 'check_last_chapter'
+    browser_page.goto( tmp[0].link )
+
+  } else {
+    main_page.send('dict_*' + JSON.stringify(database))
+    main_page.no_bar()
+    work_time = 1
+    working = 0
+
+  }
+
+}
+
+function check_last_chapter_result(found_value) {
+  let to_find = tmp[0].title
 
     database.map(
       (manga,index) => {
 
         if(manga.title == to_find) {
-          database[index].last_chapter = args[0].split('_*')[1]
+          database[index].last_chapter = found_value
 
         }
 
@@ -231,54 +290,17 @@ ipcMain.on('toMain', (event, ...args) => {
     )
 
     tmp.shift()
+    work_time++
+    main_page.progress(work_time,working)
+
     check_last_chapter()
-  }
-
-})
-
-// debug show message
-ipcMain.on('toMain', (event, ...args) => {
-
-  
-  if ( String( args[0] ).includes('db_*')  ) {
-
-     console.log(args[0]) 
-
-  }
-  
-  //console.log(args[0]) 
-  
-})
-
-
-
-function check_last_chapter() {
-
-    if ( tmp.length != 0 ) {
-
-      command = 'check_last_chapter'
-      browser_page.goto( tmp[0].link )
-
-    } else {
-      main_page.send('dict_*' + JSON.stringify(database))
-
-    }
 
 }
 
-function load_opt() {
 
-  if (! (fs.existsSync(path.join(__dirname, '/src/config/config.json'))) ) {
-
-    fs.writeFileSync(path.join(__dirname, '/src/config/config.json'),JSON.stringify(config))
-
-  } else {
-
-    config = JSON.parse( fs.readFileSync(path.join(__dirname, '/src/config/config.json')) )
-
-  }
-
-}
+/*
+CLASS
+*/
 
 class createWindow {
 
@@ -587,12 +609,12 @@ class createWindow {
 
 }
 
-function call_option() {
-  option_page = new createWindow('option')
-  option_page
 
-}
 
+
+/*
+TO START
+*/
 
 app.whenReady().then(() => {
   main_page = new createWindow('master')
@@ -624,3 +646,36 @@ app.on('window-all-closed', () => {
     app.quit()
   }
 })
+
+
+
+/*
+DEAD CODE
+*/
+
+// to send message use:
+// dialog.showMessageBox(null, options)
+
+/* to send sistem notification 
+
+sound.play(path.join(__dirname, 'src/tmp/zuccotto.mp3'))
+new Notification({
+  title: options.title,
+  body: 'STOP'
+}).show();
+
+*/
+
+/*
+
+base 
+
+ipcMain.on('toMain', (event, ...args) => {
+  if (args[0] == 'test') {
+    console.log(args[0])
+
+  }
+})
+
+
+*/

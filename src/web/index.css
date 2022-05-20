@@ -1,0 +1,11 @@
+.table_generator {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+
+.link {
+  width: 300px;
+  word-wrap: break-word;
+
+}

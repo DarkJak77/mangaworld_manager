@@ -5,8 +5,9 @@ const validChannels = ["toMain", "myRenderChannel"];
 
 let database = ''
 
-const manga_format = `<div class='{title}'>
-                      <p><img src="{img}" width="300" height="300"></p><p><a href="{link}" target="_blank" rel="noopener noreferrer">{title}</a></p>
+const manga_format = `<div class='flex-element'>
+                      <p><img src="{img}" width="300" height="300"></p>
+                      <p class='link'><a href="{link}" target="_blank" rel="noopener noreferrer">{title}</a></p>
                       <p>{last_read}</p>
                       <p>{status}</p>
                       <p>{last_chapter}</p>
@@ -84,7 +85,6 @@ function rebuild_data(data) {
       ipcRenderer.send('toMain', JSON.stringify(manga) )
 
       rebuilded_data += manga_format
-      .replace( '{title}' , manga.title )
       .replace( '{title}' , manga.title )
       .replace( '{title}' , manga.title )
       .replace( '{link}' , manga.link )
