@@ -3,8 +3,10 @@ const { ipcRenderer, contextBridge } = require('electron');
 // questi sono gli unici canali validi per amandare messaggi dalla pagina principale alle secondarie e viceversa
 const validChannels = ["toMain", "myRenderChannel"];
 
+// this variable contains information about favorite manga collected by the browser
 let database = ''
 
+// this is the standard manga format on the main page
 const manga_format = `<div class='flex-element'>
                       <p><img src="{img}" width="300" height="300"></p>
                       <p class='link'><a href="{link}" target="_blank" rel="noopener noreferrer">{title}</a></p>
@@ -24,6 +26,7 @@ contextBridge.exposeInMainWorld(
     }
   },
 
+  // according to the choice shows the manga
   rend: (choice) => {
     let to_work = ''
 
@@ -52,19 +55,22 @@ window.addEventListener('DOMContentLoaded', () => {
   
 })
 
-
+/*
 ipcRenderer.on("myRenderChannel", (event, ...args) => {
   if (args[0] == 'load') {
     
   } 
 
 })
+*/
 
+// when it receives the database from the browser, it copies the database 
+// variable locally to be able to reuse it and starts the rebuild function
 ipcRenderer.on("myRenderChannel", (event, ...args) => {
   if ( String(args[0]).includes('dict_*') ) {
-    
-    console.log(args[0])
 
+    document.getElementsByClassName('show_choice')[0].value = 'all'
+    
     database = JSON.parse( String(args[0]).split('dict_*')[1] )
 
     rebuild_data( database )    
@@ -73,12 +79,12 @@ ipcRenderer.on("myRenderChannel", (event, ...args) => {
 
 })
 
+// given the array provided as argument create the html page
 function rebuild_data(data) {
-  let dict = data 
 
   let rebuilded_data = ''
 
-  dict.map(
+  data.map(
 
     (manga) => {
 

@@ -33,7 +33,6 @@ ipcRenderer.on("myRenderChannel", (event, ...args) => {
 
         let to_add = {}
 
-
         to_add['title'] = Array.from(manga.getElementsByTagName('p')).filter((p) => p.title != '')[0].title
         //to_add['title'] = manga.lastChild.title
 

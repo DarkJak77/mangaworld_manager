@@ -6,10 +6,12 @@
   "main": "main.js",
   "scripts": {
     "start": "electron-forge start",
-    "package 64 Bit": "electron-forge package",
+    "package": "electron-forge package",
     "package 32 Bit": "electron-forge package --arch=ia32",
-    "make 64 Bit": "electron-forge make",
+    "package 64 Bit": "electron-forge package --arch=x64",
+    "make": "electron-forge make",
     "make 32 Bit": "electron-forge make --arch=ia32",
+    "make 64 Bit": "electron-forge make --arch=x64",
     "change os": "npm rebuild",
     "update": "npm update"
   },
@@ -28,6 +30,7 @@
     "electron-osx-prompt": "^1.4.1",
     "electron-squirrel-startup": "^1.0.0",
     "puppeteer": "^13.7.0",
+    "rpmbuild": "^0.0.23",
     "shell": "^0.9.4",
     "sound-play": "^1.1.0"
   },

@@ -11,7 +11,7 @@ const pup = require('./src/js/pup')
 BROWSER VARIABLES
 */
 
-// window 
+
 let main_page = ''
 let browser_page = ''
 let option_page = ''
@@ -26,7 +26,11 @@ VARIABLES
 // easy edit value
 const app_title = 'MangaWorld Manager'
 const site = 'https://www.mangaworld.in/'
+
+// this is the container class of favorite manga
 const class_fav = 'entry vertical bookmark'
+
+// this is a manga class's 
 const chapter_class = 'chapter'
 let config = {
   'auto_update_on_start' : false,
@@ -90,7 +94,14 @@ ipcMain.on('toMain', (event, ...args) => {
 
 // login and register
 ipcMain.on('toMain', (event, ...args) => {
+
+  // this series of functions is used to connect to 
+  // an account if the cookies are invalid or not present
+
   if (args[0] == 'load_slave' && account == 0) {
+
+    // if it does not detect the account, the browser screen appears 
+    // in order to connect and / or create a new account
 
     if (browser_page.check_page() == (site + 'login')) {
       console.log('not logged')
@@ -103,6 +114,9 @@ ipcMain.on('toMain', (event, ...args) => {
       browser_page.show()
 
     } else if (browser_page.check_page().includes('bookmarks')) {
+
+      // if it detects the account, it looks for your favorite manga
+
       account = 1
       browser_page.saveCookie()
 
@@ -111,14 +125,23 @@ ipcMain.on('toMain', (event, ...args) => {
 
 
     } else if (browser_page.check_page() == (site + 'register')) {
-      //none
+
+      // the program gives the possibility to create an account
 
     } else {
+
+      // if it does not detect the account at each refresh it tries to connect to 
+      // the favorites page in order to check if the account has been entered
+
       browser_page.goto(site + 'bookmarks')
 
     }
 
-  } else if (args[0] == 'load_slave' && account == 1 && command == 'check_last_chapter' ) {
+  } 
+
+  // it is used when looking for the last read chapter of your favorite manga
+
+  else if (args[0] == 'load_slave' && account == 1 && command == 'check_last_chapter' ) {
 
     browser_page.send('check_last_chapter_*' + chapter_class)
     command = ''
@@ -128,6 +151,10 @@ ipcMain.on('toMain', (event, ...args) => {
 
 // render page to main
 ipcMain.on('toMain', (event, ...args) => {
+
+  // this function is used to forward the manga 
+  // list from the browser to the main page
+
   if (String(args[0]).includes('dict_*')) {
 
     database = JSON.parse( args[0].split('_*')[1] )
@@ -198,7 +225,11 @@ ipcMain.on('toMain', (event, ...args) => {
 FUNCTION
 */
 
+// this function is used to load the config.json file. 
+
 function load_opt() {
+
+  // If it is not present, a standard is created
 
   if (! (fs.existsSync(path.join(__dirname, '/src/config/config.json'))) ) {
 
@@ -212,11 +243,15 @@ function load_opt() {
 
 }
 
+// this function open a option page
+
 function call_option() {
   option_page = new createWindow('option')
   option_page
 
 }
+
+// this function is used to choose which manga to update
 
 function update_manga() {
   tmp = []
@@ -250,12 +285,17 @@ function update_manga() {
 
     )
     
+    // these variables are used for the status bar ( does not work in linux )
+
     working = tmp.length
     main_page.progress(work_time,working)
 
     check_last_chapter()
 
 }
+
+// This is a loop: as long as the tmp array is not empty 
+// it continues to send links to the browser
 
 function check_last_chapter() {
 
@@ -273,6 +313,9 @@ function check_last_chapter() {
   }
 
 }
+
+// this function is used to update the database with 
+// the new values collected (last chapter read)
 
 function check_last_chapter_result(found_value) {
   let to_find = tmp[0].title
@@ -422,6 +465,7 @@ class createWindow {
 
     };
 
+    /*
     if (0 != 0) {
       this.close = true
 
@@ -431,26 +475,27 @@ class createWindow {
       app.quit()
 
     } else {
+      */
 
-      if (this.mode == 'slave') {
-        this.hide()
+    if (this.mode == 'slave') {
+      this.hide()
 
-      } else {
-        //show the dialog
-        dialog.showMessageBox(this.win, messageBoxOptions)
-          .then(result => {
-            if (result.response == 0) {
-              // to delete data session 
-              session.defaultSession.clearStorageData((data) => { })
+    } else {
+      //show the dialog
+      dialog.showMessageBox(this.win, messageBoxOptions)
+        .then(result => {
+          if (result.response == 0) {
+            // to delete data session 
+            session.defaultSession.clearStorageData((data) => { })
 
-              this.close = true
-              browser_page.close = true
-              app.quit()
+            this.close = true
+            browser_page.close = true
+            app.quit()
 
-            }
-          })
-      }
+          }
+        })
     }
+   // }
 
 
   }
