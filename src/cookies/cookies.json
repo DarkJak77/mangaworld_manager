@@ -8,7 +8,7 @@
     "secure": false,
     "httpOnly": true,
     "session": false,
-    "expirationDate": 1685276328.564136,
+    "expirationDate": 1685397681.68669,
     "sameSite": "unspecified",
     "url": "https://www.mangaworld.in/bookmarks/6071e867b74a270a28c6c9db"
   },
@@ -21,7 +21,7 @@
     "secure": false,
     "httpOnly": false,
     "session": false,
-    "expirationDate": 1716816769,
+    "expirationDate": 1716932766,
     "sameSite": "unspecified",
     "url": "https://www.mangaworld.in/bookmarks/6071e867b74a270a28c6c9db"
   },
@@ -53,34 +53,22 @@
   },
   {
     "name": "_gid",
-    "value": "GA1.2.1929693455.1653732819",
+    "value": "GA1.2.1069076975.1653843389",
     "domain": ".mangaworld.in",
     "hostOnly": false,
     "path": "/",
     "secure": false,
     "httpOnly": false,
     "session": false,
-    "expirationDate": 1653831169,
+    "expirationDate": 1653947166,
     "sameSite": "unspecified",
     "url": "https://www.mangaworld.in/bookmarks/6071e867b74a270a28c6c9db"
   },
   {
     "name": "_csrf",
-    "value": "8s8KBHxCFHhsXorNsgzWLkWe",
+    "value": "yaXOJU6ABgrmHuGWzOx5YjU3",
     "domain": ".www.mangaworld.in",
     "hostOnly": false,
-    "path": "/",
-    "secure": false,
-    "httpOnly": false,
-    "session": true,
-    "sameSite": "unspecified",
-    "url": "https://www.mangaworld.in/bookmarks/6071e867b74a270a28c6c9db"
-  },
-  {
-    "name": "_csrf",
-    "value": "EhG9GO4WC3bt173kRV1dqN4V",
-    "domain": "www.mangaworld.in",
-    "hostOnly": true,
     "path": "/",
     "secure": false,
     "httpOnly": false,
@@ -97,20 +85,7 @@
     "secure": false,
     "httpOnly": true,
     "session": false,
-    "expirationDate": 1685280769.796329,
-    "sameSite": "unspecified",
-    "url": "https://www.mangaworld.in/bookmarks/6071e867b74a270a28c6c9db"
-  },
-  {
-    "name": "_gat_gtag_UA_93961448_2",
-    "value": "1",
-    "domain": ".mangaworld.in",
-    "hostOnly": false,
-    "path": "/",
-    "secure": false,
-    "httpOnly": false,
-    "session": false,
-    "expirationDate": 1653744829,
+    "expirationDate": 1685397742.760974,
     "sameSite": "unspecified",
     "url": "https://www.mangaworld.in/bookmarks/6071e867b74a270a28c6c9db"
   }

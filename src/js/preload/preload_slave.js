@@ -5,7 +5,7 @@ const DOMParser = require('dom-parser')
 let element = new DOMParser().parseFromString(tmp_value, "text/xml");
 */
 
-
+// contains all your favorite manga items
 let dict = [
 
 
@@ -23,6 +23,8 @@ window.addEventListener('DOMContentLoaded', () => {
 ipcRenderer.on("myRenderChannel", (event, ...args) => {
   if (args[0] == 'load') {
 
+    // this is used to obtain all the information of the favorite manga and,
+    // at the end of this, send the data to the main
   } else if (String(args[0]).includes('check_fav_*')) {
 
     let fav = document.getElementsByClassName(args[0].split('_*')[1])
@@ -89,6 +91,8 @@ ipcRenderer.on("myRenderChannel", (event, ...args) => {
 
 
 ipcRenderer.on("myRenderChannel", (event, ...args) => {
+  
+  // this function is used to obtain the number of the last chapter read of a given manga
   if (String(args[0]).includes('check_last_chapter_*')) {
 
 

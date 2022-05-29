@@ -289,6 +289,12 @@ function update_manga() {
 
     working = tmp.length
     main_page.progress(work_time,working)
+    main_page.title('Updating....   '+work_time+'/'+working)
+
+    new Notification({
+      title: app_title,
+      body: 'Start Scan for Updates'
+    }).show();
 
     check_last_chapter()
 
@@ -307,8 +313,17 @@ function check_last_chapter() {
   } else {
     main_page.send('dict_*' + JSON.stringify(database))
     main_page.no_bar()
+    main_page.title_default()
     work_time = 1
     working = 0
+
+    new Notification({
+      title: app_title,
+      body: 'Scanning Completed!'
+    }).show();
+
+    // When it finishes updating it unlocks the "With chapters to read" option
+    main_page.send('unlock')
 
   }
 
@@ -335,6 +350,7 @@ function check_last_chapter_result(found_value) {
     tmp.shift()
     work_time++
     main_page.progress(work_time,working)
+    main_page.title('Updating....   '+work_time+'/'+working)
 
     check_last_chapter()
 

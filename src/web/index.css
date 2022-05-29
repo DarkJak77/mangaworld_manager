@@ -1,18 +1,28 @@
+body {
+  overflow-y: hidden;
+}
+
+.top {
+  display: flex;
+  padding: 1vh;
+}
+
+.bottom {
+  display: flex;
+  padding: 1vh;
+}
+
 .table_generator {
   display: flex;
   flex-wrap: wrap;
+  overflow-y: scroll;
+  max-height: 90vh;
+  
 }
-
 
 .link {
   width: 300px;
   word-wrap: break-word;
-
-}
-
-.test {
-  display: flex;
-  
 
 }
 

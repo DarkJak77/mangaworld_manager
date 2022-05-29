@@ -22,6 +22,7 @@ contextBridge.exposeInMainWorld(
     }
   },
 
+  // reports html changes in the option array
   change: (choice) => {
     if (prevent_change_option == 0) {
 
@@ -36,6 +37,7 @@ contextBridge.exposeInMainWorld(
     }
   },
 
+  //sends the modified array option to main
   save: () => {
     ipcRenderer.send('toMain', 'save_option_*' + JSON.stringify(option));
 
@@ -44,7 +46,9 @@ contextBridge.exposeInMainWorld(
 }
 )
 
-
+// when the array option is loaded the html file is "restored" by clicking all the modified 
+// buttons to make the loaded array mirror. in this phase clicking the buttons must not cause 
+// consequences to the array
 function load_option() {
   prevent_change_option = 1
 
@@ -76,6 +80,7 @@ window.addEventListener('DOMContentLoaded', () => {
 ipcRenderer.on("myRenderChannel", (event, ...args) => {
   if (args[0] == 'load') {
 
+    // receives the array with the options and loads them into the option variable
   } else if (String(args[0]).includes('option_file_*')) {
 
     option = JSON.parse(args[0].split('_*')[1])

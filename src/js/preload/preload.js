@@ -10,9 +10,9 @@ let database = ''
 const manga_format = `<div class='flex-element'>
                       <p><img src="{img}" width="300" height="300"></p>
                       <p class='link'><a href="{link}" target="_blank" rel="noopener noreferrer">{title}</a></p>
-                      <p>{last_read}</p>
-                      <p>{status}</p>
-                      <p>{last_chapter}</p>
+                      <p>Ultimo Letto: {last_read}</p>
+                      <p>Status: {status}</p>
+                      <p>Ultimo Uscito: {last_chapter}</p>
                       </div>`
 
 
@@ -33,6 +33,17 @@ contextBridge.exposeInMainWorld(
     if (choice == 'all') {
       to_work = database
 
+      // If the choice is "With chapters to read" it executes a filter and looks for the manga
+      //  whose value of the last chapter read is different from the last chapter released
+    } else if (choice == 'last_update') {
+
+      to_work = database.filter(
+        (manga) => manga['last_read'] != manga['last_chapter'] 
+                && manga['last_read'] != 'null' 
+                && manga['last_chapter'] != ''
+
+      )
+
     } else {
 
       to_work = database.filter(
@@ -48,6 +59,35 @@ contextBridge.exposeInMainWorld(
 
 }
 )
+
+
+// given the array provided as argument create the html page
+function rebuild_data(data) {
+
+  let rebuilded_data = ''
+
+  data.map(
+
+    (manga) => {
+
+      rebuilded_data += manga_format
+      .replace( '{title}' , manga.title )
+      .replace( '{title}' , manga.title )
+      .replace( '{link}' , manga.link )
+      .replace( '{img}' , manga.img )
+      .replace( '{last_read}' , manga.last_read )
+      .replace( '{status}' , manga.status )
+      .replace( '{last_chapter}', manga.last_chapter )
+
+    }
+
+  )
+
+  document.getElementsByClassName('table_generator')[0].innerHTML = rebuilded_data
+
+}
+
+
 
 // when page is loaded
 window.addEventListener('DOMContentLoaded', () => {
@@ -79,32 +119,11 @@ ipcRenderer.on("myRenderChannel", (event, ...args) => {
 
 })
 
-// given the array provided as argument create the html page
-function rebuild_data(data) {
+// Unlock "With Chapters to Read" choice
+ipcRenderer.on("myRenderChannel", (event, ...args) => {
+  if (args[0] == 'unlock') {
+    document.getElementById('hidden').removeAttribute('hidden')
+    
+  } 
 
-  let rebuilded_data = ''
-
-  data.map(
-
-    (manga) => {
-
-      ipcRenderer.send('toMain', JSON.stringify(manga) )
-
-      rebuilded_data += manga_format
-      .replace( '{title}' , manga.title )
-      .replace( '{title}' , manga.title )
-      .replace( '{link}' , manga.link )
-      .replace( '{img}' , manga.img )
-      .replace( '{last_read}' , manga.last_read )
-      .replace( '{status}' , manga.status )
-      .replace( '{last_chapter}', manga.last_chapter )
-
-    }
-
-  )
-
-  document.getElementsByClassName('table_generator')[0].innerHTML = rebuilded_data
-
-}
-
-
+})
