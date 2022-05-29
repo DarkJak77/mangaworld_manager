@@ -76,6 +76,16 @@ ipcRenderer.on("myRenderChannel", (event, ...args) => {
 
         to_add['last_chapter'] = ''
 
+        if ( Array.from(manga.getElementsByTagName('span')).filter((span) => span.innerText == '+18').length != 0 ) {
+
+          to_add['sfw'] = 'nsfw'
+
+        } else {
+
+          to_add['sfw'] = 'sfw'
+
+        }
+
         dict.push(to_add)
 
       }

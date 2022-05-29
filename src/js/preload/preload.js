@@ -6,13 +6,15 @@ const validChannels = ["toMain", "myRenderChannel"];
 // this variable contains information about favorite manga collected by the browser
 let database = ''
 
+let option = {}
+
 // this is the standard manga format on the main page
 const manga_format = `<div class='flex-element'>
                       <p><img src="{img}" width="300" height="300"></p>
                       <p class='link'><a href="{link}" target="_blank" rel="noopener noreferrer">{title}</a></p>
                       <p>Ultimo Letto: {last_read}</p>
-                      <p>Status: {status}</p>
                       <p>Ultimo Uscito: {last_chapter}</p>
+                      <p>Status: {status}</p>
                       </div>`
 
 
@@ -52,6 +54,7 @@ contextBridge.exposeInMainWorld(
       )
 
     }
+    
 
     rebuild_data( to_work )
 
@@ -70,6 +73,16 @@ function rebuild_data(data) {
 
     (manga) => {
 
+
+      // sfw function
+
+      if (option['sfw'] == true && manga['sfw'] == 'nsfw') {
+        // pass
+
+        ipcRenderer.send('toMain','test')
+
+      } else  {
+
       rebuilded_data += manga_format
       .replace( '{title}' , manga.title )
       .replace( '{title}' , manga.title )
@@ -78,6 +91,11 @@ function rebuild_data(data) {
       .replace( '{last_read}' , manga.last_read )
       .replace( '{status}' , manga.status )
       .replace( '{last_chapter}', manga.last_chapter )
+
+      }
+
+
+      
 
     }
 
@@ -103,6 +121,20 @@ ipcRenderer.on("myRenderChannel", (event, ...args) => {
 
 })
 */
+
+ipcRenderer.on("myRenderChannel", (event, ...args) => {
+  
+  // receives the array with the options and loads them into the option variable
+  if (String(args[0]).includes('option_file_*')) {
+
+    option = JSON.parse(args[0].split('_*')[1])
+
+    // Reload comics when settings are changed (sfw)
+    rebuild_data(database)
+
+  }
+
+})
 
 // when it receives the database from the browser, it copies the database 
 // variable locally to be able to reuse it and starts the rebuild function

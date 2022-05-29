@@ -36,12 +36,14 @@
   },
   "config": {
     "forge": {
-      "packagerConfig": {},
+      "packagerConfig": {
+        "icon":"./src/ico/manga.ico"
+      },
       "makers": [
         {
           "name": "@electron-forge/maker-squirrel",
           "config": {
-            "name": "simple_telephone_book"
+            "name": "test"
           }
         },
         {

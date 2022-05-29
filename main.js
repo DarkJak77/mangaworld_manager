@@ -37,7 +37,8 @@ let config = {
   'complete_skip' : false,
   'drop_skip' : false,
   'stop_skip' : false,
-  'to_read_skip' : false
+  'to_read_skip' : false,
+  'sfw' : true
 }
 
 // 0 = no account / 1 = account
@@ -70,6 +71,7 @@ LISTENER
 ipcMain.on('toMain', (event, ...args) => {
   if ( args[0] == 'load') {
     load_opt()
+    main_page.send('option_file_*' + JSON.stringify( config ) )
 
   } else if (args[0] == 'show_*') {
     browser_page.show()
@@ -177,11 +179,14 @@ ipcMain.on('toMain', (event, ...args) => {
     load_opt()
 
     option_page.send('option_file_*' + JSON.stringify( config ) )
+    main_page.send('option_file_*' + JSON.stringify( config ) )
 
   } else if ( String(args[0]).includes('save_option_*') ) {
 
     config = JSON.parse( args[0].split('_*')[1] )
     fs.writeFileSync(path.join(__dirname, '/src/config/config.json'), args[0].split('_*')[1] )
+
+    main_page.send('option_file_*' + JSON.stringify( config ) )
 
     dialog.showMessageBox(null, {
       type: 'info', title: 'MangaWorld Manager',
@@ -426,7 +431,7 @@ class createWindow {
       this.win = new BrowserWindow({
         title: app_title + '- Option Page',
         width: 400,
-        height: 275,
+        height: 300,
         maximizable: false,
         show: true,
 

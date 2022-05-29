@@ -35,6 +35,7 @@ contextBridge.exposeInMainWorld(
       }
 
     }
+
   },
 
   //sends the modified array option to main
