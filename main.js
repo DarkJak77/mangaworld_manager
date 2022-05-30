@@ -487,7 +487,7 @@ class createWindow {
       type: 'info',
       buttons: ['Exit', 'Wait up'],
       defaultId: 0,
-      message: 'WIP'
+      message: 'Are you sure you want to quit the app?'
 
     };
 
