@@ -2,7 +2,6 @@ const { app, BrowserWindow, ipcMain, dialog, session, Notification, shell } = re
 const path = require('path')
 const fs = require('fs')
 const sound = require("sound-play");
-const pup = require('./src/js/pup')
 
 
 
@@ -109,7 +108,7 @@ ipcMain.on('toMain', (event, ...args) => {
       console.log('not logged')
 
       dialog.showMessageBox(null, {
-        type: 'info', title: 'MangaWorld Manager',
+        type: 'info', title: app_title,
         message: 'Benenuto! \nCome prima cosa collega il tuo Account \nSe non ne hai uno Crealo! '
       })
 
@@ -189,7 +188,7 @@ ipcMain.on('toMain', (event, ...args) => {
     main_page.send('option_file_*' + JSON.stringify( config ) )
 
     dialog.showMessageBox(null, {
-      type: 'info', title: 'MangaWorld Manager',
+      type: 'info', title: app_title,
       message: 'Preferenze salvate con successo!'
     })
 
@@ -397,6 +396,9 @@ class createWindow {
         //this.win.webContents.openDevTools();
       }
 
+      // Disable the Menu
+      this.win.setMenu(null)
+
 
       /*
       // Disable the Menu
@@ -451,6 +453,9 @@ class createWindow {
       }
 
       this.win.loadFile('src/web/option.html')
+
+      // Disable the Menu
+      this.win.setMenu(null)
 
     }
 

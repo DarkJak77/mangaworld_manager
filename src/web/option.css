@@ -1,3 +1,7 @@
+body {
+  background-color: #2E6B99;
+}
+
 .form-switch {
     display: inline-block;
     cursor: pointer;
