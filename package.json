@@ -37,7 +37,7 @@
   "config": {
     "forge": {
       "packagerConfig": {
-        "icon":"./src/ico/manga.ico"
+        "icon": "./src/ico/manga.ico"
       },
       "makers": [
         {

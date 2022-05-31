@@ -129,8 +129,14 @@ ipcRenderer.on("myRenderChannel", (event, ...args) => {
 
     option = JSON.parse(args[0].split('_*')[1])
 
-    // Reload comics when settings are changed (sfw)
-    rebuild_data(database)
+    if ( database != '') {
+
+      // Reload comics when settings are changed (sfw)
+      rebuild_data(database)
+
+    }
+
+    
 
   }
 

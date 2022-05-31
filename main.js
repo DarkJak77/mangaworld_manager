@@ -49,6 +49,9 @@ const dev = 1;
 let database = {}
 let tmp = ''
 let command = ''
+
+// 0 = not working / 1 = working
+let engaged = 0
 let working = 0
 let work_time = 1
 
@@ -167,6 +170,12 @@ ipcMain.on('toMain', (event, ...args) => {
 
     }
 
+    if ( command == 'reload') {
+
+      update_manga()
+
+    }
+
   }
 
 })
@@ -201,7 +210,35 @@ ipcMain.on('toMain', (event, ...args) => {
 
   if ((args[0]) == 'update_*') {
 
-    update_manga()
+    if ( engaged == 0 ) {
+
+      if ( account == 1) {
+
+        // check your favorite manga first and then check for updates
+
+        engaged++
+        command = 'reload'
+        browser_page.send('check_fav_*' + class_fav)
+
+      } else {
+
+        dialog.showMessageBox(null, {
+          type: 'error', title: app_title,
+          message: 'Non hai un account!'
+        })
+
+      }
+
+    } else {
+
+      dialog.showMessageBox(null, {
+        type: 'error', title: app_title,
+        message: 'Attendi che l\'operazione precedente termini'
+      })
+
+    }
+
+    
 
   } else if ( String(args[0]).includes('check_last_chapter_result_*') ) {
 
@@ -289,6 +326,8 @@ function update_manga() {
 
     )
     
+    command = ''
+
     // these variables are used for the status bar ( does not work in linux )
 
     working = tmp.length
@@ -320,6 +359,7 @@ function check_last_chapter() {
     main_page.title_default()
     work_time = 1
     working = 0
+    engaged--
 
     new Notification({
       title: app_title,
@@ -397,13 +437,8 @@ class createWindow {
       }
 
       // Disable the Menu
-      this.win.setMenu(null)
+      //this.win.setMenu(null)
 
-
-      /*
-      // Disable the Menu
-      win.setMenu(null)
-      */
 
       this.win.loadFile('src/web/index.html')
 
@@ -490,18 +525,6 @@ class createWindow {
       message: 'Are you sure you want to quit the app?'
 
     };
-
-    /*
-    if (0 != 0) {
-      this.close = true
-
-      // to delete data session 
-      session.defaultSession.clearStorageData((data) => { })
-      browser.close = true
-      app.quit()
-
-    } else {
-      */
 
     if (this.mode == 'slave') {
       this.hide()

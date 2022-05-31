@@ -6,10 +6,7 @@ let element = new DOMParser().parseFromString(tmp_value, "text/xml");
 */
 
 // contains all your favorite manga items
-let dict = [
-
-
-]
+let dict = []
 
 
 // when page is loaded
@@ -26,6 +23,8 @@ ipcRenderer.on("myRenderChannel", (event, ...args) => {
     // this is used to obtain all the information of the favorite manga and,
     // at the end of this, send the data to the main
   } else if (String(args[0]).includes('check_fav_*')) {
+
+    dict = []
 
     let fav = document.getElementsByClassName(args[0].split('_*')[1])
 

@@ -2,6 +2,12 @@ body {
   background-color: #2E6B99;
 }
 
+/*
+
+credit by https://codepen.io/TazTheManiac/pen/rGrpMg
+
+*/
+
 .form-switch {
     display: inline-block;
     cursor: pointer;
