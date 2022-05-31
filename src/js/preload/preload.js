@@ -30,7 +30,10 @@ contextBridge.exposeInMainWorld(
 
   // according to the choice shows the manga
   rend: (choice) => {
-    let to_work = ''
+
+    if ( database.length != 0) {
+
+      let to_work = ''
 
     if (choice == 'all') {
       to_work = database
@@ -57,6 +60,10 @@ contextBridge.exposeInMainWorld(
     
 
     rebuild_data( to_work )
+    
+    }
+
+    
 
   }
 

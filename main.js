@@ -1,7 +1,6 @@
 const { app, BrowserWindow, ipcMain, dialog, session, Notification, shell } = require('electron')
 const path = require('path')
 const fs = require('fs')
-const sound = require("sound-play");
 
 
 
@@ -44,7 +43,7 @@ let config = {
 let account = 0
 
 // for fullscreen and resizable
-const dev = 1;
+const dev = 0;
 
 let database = {}
 let tmp = ''
@@ -417,10 +416,12 @@ class createWindow {
         title: app_title,
         width: 800,
         height: 800,
+        resizable: true,
+        maximizable: true,
 
-        /*
+        
         icon: path.join(__dirname, '/src/ico/manga.ico'),
-        */
+        
 
         webPreferences: {
           preload: path.join(__dirname, '/src/js/preload/preload.js')
@@ -429,16 +430,8 @@ class createWindow {
 
       this.win.setPosition(0, 0)
 
-
-      if (dev == 1) {
-        this.win.resizable = true,
-          this.win.fullscreenable = true
-        //this.win.webContents.openDevTools();
-      }
-
       // Disable the Menu
-      //this.win.setMenu(null)
-
+      this.win.setMenu(null)
 
       this.win.loadFile('src/web/index.html')
 
@@ -449,28 +442,28 @@ class createWindow {
         height: 800,
         maximizable: true,
         show: false,
+        resizable: true,
+
+        icon: path.join(__dirname, '/src/ico/manga.ico'),
 
         webPreferences: {
           preload: path.join(__dirname, '/src/js/preload/preload_slave.js')
         }
 
       })
-      this.win.setPosition(500, 0)
 
-      if (dev == 1) {
-        this.win.resizable = true,
-          this.win.fullscreenable = true
-        //this.win.webContents.openDevTools();
-      }
+      this.win.setPosition(500, 0)
 
     } else if (this.mode == 'option') {
 
       this.win = new BrowserWindow({
         title: app_title + '- Option Page',
         width: 400,
-        height: 300,
+        height: 350,
         maximizable: false,
         show: true,
+
+        icon: path.join(__dirname, '/src/ico/manga.ico'),
 
         webPreferences: {
           preload: path.join(__dirname, '/src/js/preload/preload_option.js')
@@ -478,7 +471,6 @@ class createWindow {
 
       })
       
-      this.win.setMenu(null)
       this.win.setPosition(500, 0)
 
       if (dev == 1) {
