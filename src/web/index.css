@@ -1,0 +1,48 @@
+body {
+  overflow-y: hidden;
+  background-color: #051F33;
+}
+
+.top {
+  display: flex;
+  padding: 1vh;
+  justify-content: space-between;
+  background-color: #2E6B99;
+}
+
+.bottom {
+  display: flex;
+  padding: 1vh;
+  background-color: #2E6B99;
+}
+
+.table_generator {
+  display: flex;
+  flex-wrap: wrap;
+  overflow-y: scroll;
+  max-height: 90vh;
+  background-color: #144366;
+  
+}
+
+.link {
+  width: 300px;
+  word-wrap: break-word;
+
+}
+
+p {
+  color:#80C8FF
+
+}
+
+a {
+  color:#80C8FF
+
+}
+
+.test {
+  margin-right: 5vw;
+  
+
+}

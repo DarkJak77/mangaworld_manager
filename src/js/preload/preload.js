@@ -3,28 +3,20 @@ const { ipcRenderer, contextBridge } = require('electron');
 // questi sono gli unici canali validi per amandare messaggi dalla pagina principale alle secondarie e viceversa
 const validChannels = ["toMain", "myRenderChannel"];
 
-// questa funzione serve per aggiornare la taballe presente nella pagina principale con i manga aggiunti tra i preferiti
-function to_rend() {
+// this variable contains information about favorite manga collected by the browser
+let database = ''
 
-  const path = require('path')
-  const fs = require('fs')
+let option = {}
 
-  let json = {
-    raw: '',
-    data: ''
-  }
+// this is the standard manga format on the main page
+const manga_format = `<div class='flex-element'>
+                      <p><img src="{img}" width="300" height="300"></p>
+                      <p class='link'><a href="{link}" target="_blank" rel="noopener noreferrer">{title}</a></p>
+                      <p>Ultimo Letto: {last_read}</p>
+                      <p>Ultimo Uscito: {last_chapter}</p>
+                      <p>Status: {status}</p>
+                      </div>`
 
-  let path_dir = path.join(__dirname, '..\\..')
-  json.raw = fs.readFileSync(path_dir + '\\json\\fav.json');
-  json.data = JSON.parse(fs.readFileSync(path_dir + '\\json\\fav.json'))
-
-  document.getElementById('tab').innerHTML = Object.keys(json.data).map((v,index) => 
-  
-  "<tr><td id='name_manga'>{v}</td><td>.{del}</td></tr>"
-  .replaceAll('.{del}', "<button type='button' id='del' onclick={del("+index+")}>Delete</button>")
-  .replaceAll('{v}', v)
-).join(' ')
-}
 
 // questa funzione rende i comandi qui sotto richiamabili dal file master.js
 contextBridge.exposeInMainWorld(
@@ -36,35 +28,147 @@ contextBridge.exposeInMainWorld(
     }
   },
 
-  // controlla se i link inseriti nell'input sono validi, e se si tratta di un singolo capitolo o
-  // della pagina principale di un manga
-  check: () => {
-    let values = document.getElementsByClassName('hoverBorder631050db')[0].value
-    if (values.includes('https://www.mangaworld.in/manga/') && values.includes('/read/')) {
-      return 'chapter_*' + values
-    } else if (values.includes('https://www.mangaworld.in/manga/')) {
-      return 'volume_*' + values
+  // according to the choice shows the manga
+  rend: (choice) => {
+
+    if ( database.length != 0) {
+
+      let to_work = ''
+
+    if (choice == 'all') {
+      to_work = database
+
+      // If the choice is "With chapters to read" it executes a filter and looks for the manga
+      //  whose value of the last chapter read is different from the last chapter released
+    } else if (choice == 'last_update') {
+
+      to_work = database.filter(
+        (manga) => manga['last_read'] != manga['last_chapter'] 
+                && manga['last_read'] != 'null' 
+                && manga['last_chapter'] != ''
+
+      )
+
     } else {
-      return '*e_r_r_o_r*'
+
+      to_work = database.filter(
+        (manga) => manga['status'] == choice
+
+      )
+
     }
-  },
+    
+
+    rebuild_data( to_work )
+    
+    }
+
+    
+
+  }
+
 }
 )
 
-// crea la tabella quando la pagina main viene creata
+
+// given the array provided as argument create the html page
+function rebuild_data(data) {
+
+  let rebuilded_data = ''
+
+  data.map(
+
+    (manga) => {
+
+
+      // sfw function
+
+      if (option['sfw'] == true && manga['sfw'] == 'nsfw') {
+        // pass
+
+        ipcRenderer.send('toMain','test')
+
+      } else  {
+
+      rebuilded_data += manga_format
+      .replace( '{title}' , manga.title )
+      .replace( '{title}' , manga.title )
+      .replace( '{link}' , manga.link )
+      .replace( '{img}' , manga.img )
+      .replace( '{last_read}' , manga.last_read )
+      .replace( '{status}' , manga.status )
+      .replace( '{last_chapter}', manga.last_chapter )
+
+      }
+
+
+      
+
+    }
+
+  )
+
+  document.getElementsByClassName('table_generator')[0].innerHTML = rebuilded_data
+
+}
+
+
+
+// when page is loaded
 window.addEventListener('DOMContentLoaded', () => {
   ipcRenderer.send('toMain','load')
   
 })
 
-// aggiorna la tabella a ogni variazione, fumetti aggiunti o rimossi
+/*
 ipcRenderer.on("myRenderChannel", (event, ...args) => {
   if (args[0] == 'load') {
-    to_rend()
-    // cerca nuovi manga all'avvio
-    document.getElementsByClassName('basicInputButtonsHyperlinksAccentButtonHover7c2a7e63')[0].click()
     
-  } else if (args[0] == 'rend'){
-    to_rend()
+  } 
+
+})
+*/
+
+ipcRenderer.on("myRenderChannel", (event, ...args) => {
+  
+  // receives the array with the options and loads them into the option variable
+  if (String(args[0]).includes('option_file_*')) {
+
+    option = JSON.parse(args[0].split('_*')[1])
+
+    if ( database != '') {
+
+      // Reload comics when settings are changed (sfw)
+      rebuild_data(database)
+
+    }
+
+    
+
   }
+
+})
+
+// when it receives the database from the browser, it copies the database 
+// variable locally to be able to reuse it and starts the rebuild function
+ipcRenderer.on("myRenderChannel", (event, ...args) => {
+  if ( String(args[0]).includes('dict_*') ) {
+
+    document.getElementsByClassName('show_choice')[0].value = 'all'
+    
+    database = JSON.parse( String(args[0]).split('dict_*')[1] )
+
+    rebuild_data( database )    
+
+  } 
+
+})
+
+// Unlock "With Chapters to Read" choice
+ipcRenderer.on("myRenderChannel", (event, ...args) => {
+  if (args[0] == 'unlock') {
+    document.getElementById('hidden').removeAttribute('hidden')
+    
+  } 
+
 })

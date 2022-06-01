@@ -1,21 +1,29 @@
-function download() {
-    let value = window.api.check()
-    window.api.send('toMain', value)
+function show() {
+    window.api.send('toMain', 'show_*')
+
 }
 
-function add_to_fav() {
-    let value = window.api.check()
-    window.api.send('toMain', 'fav_*' + value)
+function hide() {
+    window.api.send('toMain', 'hide_*')
+
 }
 
-function check_new() {
-    window.api.send('toMain', 'check_new_*volume_*')
+function option() {
+    window.api.send('toMain', 'option_*')
+
 }
 
-function del(index) {
-    window.api.send('toMain', 'del_*' + index)
+function update() {
+    window.api.send('toMain', 'update_*')
+
 }
 
-function how_to() {
-    window.api.send('toMain', 'how_to_*')
+function rend() {
+    const select = document.getElementsByClassName('show_choice')[0]
+    const option = Array.from(select).filter(
+        (select) => select.selected 
+    )[0].value
+
+    window.api.rend(option)
+
 }

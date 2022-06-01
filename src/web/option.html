@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<script src="../js/option.js"></script>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>MangaWorld Manager - Option Page</title>
+    <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline';" />
+</head>
+
+<link rel="stylesheet" href="option.css">
+
+<body onselectstart="return(false);">
+
+    <label class="form-switch">
+        <input type="checkbox" onchange= "change('auto_update_on_start')" >
+        <i></i>
+        Auto Update On Start
+    </label>
+    <p></p>
+
+    <label class="form-switch">
+        <input type="checkbox" onchange= "change('complete_skip')" >
+        <i></i>
+        Skip Complete To Search Update
+    </label>
+    <p></p>
+
+    <label class="form-switch">
+        <input type="checkbox" onchange= "change('drop_skip')" >
+        <i></i>
+        Skip Dropped To Search Update
+    </label>
+    <p></p>
+
+    <label class="form-switch">
+        <input type="checkbox" onchange= "change('stop_skip')" >
+        <i></i>
+        Skip Stopped To Search Update
+    </label>
+    <p></p>
+
+    <label class="form-switch">
+        <input type="checkbox" onchange= "change('to_read_skip')" >
+        <i></i>
+        Skip To Read To Search Update
+    </label>
+    <p></p>
+
+    <label class="form-switch">
+        <input type="checkbox" onchange= "change('sfw')" >
+        <i></i>
+        Safe For Work
+    </label>
+    <p></p>
+
+    <p></p>
+    <button class="'save" onclick="save()">Save Setting</button>
+
+</body>
+
+</html>

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<script src="../js/master.js"></script>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>MangaWorld Manager</title>
+    <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline';" />
+</head>
+
+<link rel="stylesheet" href="index.css">
+
+<body onselectstart="return(false);">
+    <div class="top">
+        <!--
+            debug function
+
+            <button onclick=show()>Show</button><button onclick=hide()>Hide</button>
+        -->
+        <div>
+             <button
+            onclick=option()>Option</button><button onclick=update()>Search</button>
+        </div>
+       
+
+            <div class="test">
+                <SELECT class="show_choice" onchange=rend()>
+
+            <OPTION Value="all" selected>Tutti</OPTION>
+            <OPTION Value="reading">In Corso</OPTION>
+            <OPTION Value="last_update" hidden id="hidden">Con Capitoli da Leggere</OPTION>
+            <OPTION Value="to_read">Da Leggere</OPTION>
+            <OPTION Value="stop">In Pausa</OPTION>
+            <OPTION Value="complete">Completi</OPTION>
+            <OPTION Value="drop">Droppati</OPTION>
+
+        </SELECT>
+            </div>
+        
+
+    </div>
+
+    <div class="table_generator"></div>
+
+    <div class="bottom">Powered By DarkJak77</div>
+
+</body>
+
+</html>

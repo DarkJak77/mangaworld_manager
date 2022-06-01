@@ -1,34 +1,38 @@
 {
   "name": "mangaworld_manager",
-  "version": "2.0.0",
+  "version": "3.0.0",
   "author": "DarkJak77",
-  "description": "simple app to manage manga to mangaworld.io",
+  "description": "1. [General Info](#general-info)\r 2. [Attention](#attention)\r 3. [Usage](#usage)\r 4. [Request](#request)\r 5. [License](#license)",
   "main": "main.js",
   "scripts": {
     "start": "electron-forge start",
-    "package 64 Bit": "electron-forge package",
+    "package": "electron-forge package",
     "package 32 Bit": "electron-forge package --arch=ia32",
-    "make 64 Bit": "electron-forge make",
-    "make 32 Bit": "electron-forge make --arch=ia32"
+    "package 64 Bit": "electron-forge package --arch=x64",
+    "make": "electron-forge make",
+    "make 32 Bit": "electron-forge make --arch=ia32",
+    "make 64 Bit": "electron-forge make --arch=x64",
+    "change os": "npm rebuild",
+    "update": "npm update"
   },
   "keywords": [],
-  "license": "ISC",
+  "license": "MIT",
   "devDependencies": {
     "@electron-forge/cli": "^6.0.0-beta.54",
     "@electron-forge/maker-deb": "^6.0.0-beta.54",
     "@electron-forge/maker-rpm": "^6.0.0-beta.54",
     "@electron-forge/maker-squirrel": "^6.0.0-beta.54",
     "@electron-forge/maker-zip": "^6.0.0-beta.54",
-    "electron": "^12.0.2"
+    "electron": "^19.0.1"
   },
   "dependencies": {
-    "electron-download-manager": "^2.1.2",
     "electron-json-storage": "^4.4.0",
     "electron-osx-prompt": "^1.4.1",
-    "electron-progressbar": "^2.0.0",
     "electron-squirrel-startup": "^1.0.0",
-    "nodejs-file-downloader": "^4.4.2",
-    "request": "^2.88.2"
+    "puppeteer": "^13.7.0",
+    "rpmbuild": "^0.0.23",
+    "shell": "^0.9.4",
+    "sound-play": "^1.1.0"
   },
   "config": {
     "forge": {
@@ -39,7 +43,7 @@
         {
           "name": "@electron-forge/maker-squirrel",
           "config": {
-            "name": "mangaworld_downloader"
+            "name": "test"
           }
         },
         {
@@ -58,5 +62,13 @@
         }
       ]
     }
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DarkJak77/mangaworld_downloader.git"
+  },
+  "bugs": {
+    "url": "https://github.com/DarkJak77/mangaworld_downloader/issues"
+  },
+  "homepage": "https://github.com/DarkJak77/mangaworld_downloader#readme"
 }
