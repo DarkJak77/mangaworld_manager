@@ -4,7 +4,7 @@
 1. [General Info](#general-info)
 2. [Attention](#attention)
 3. [Usage](#usage)
-4. [Known Bugs](#known-Bugs) 
+4. [Request](#request) 
 5. [License](#license)
 
 ## GENERAL INFO
@@ -69,15 +69,12 @@
 * HOW TO - OPTION
 > Simple: the options.
 
-## Known Bugs
+## REQUEST
+- ITA - 
+> Per qualsiasi richiesta sono a disposizione.
 
-- ITA -
-* LOGIN (LINUX)
-> Vi è l'impossibilità di collegare o creare un account. 
-
-- ENG -
-* LOGIN (LINUX)
-> There is an inability to link or create an account.
+- ENG - 
+> For any request I am available.
 
 ## License
 [MIT](https://choosealicense.com/licenses/mit/)
