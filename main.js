@@ -82,6 +82,7 @@ ipcMain.on('toMain', (event, ...args) => {
 
   } else if (args[0] == 'option_*') {
 
+    // fix close
     options.defaultId = 2,
 
 
@@ -107,7 +108,6 @@ ipcMain.on('toMain', (event, ...args) => {
     // in order to connect and / or create a new account
 
     if (browser_page.check_page() == (site + 'login')) {
-      console.log('not logged')
 
       dialog.showMessageBox(null, {
         type: 'info', title: app_title,
@@ -140,11 +140,14 @@ ipcMain.on('toMain', (event, ...args) => {
 
     }
 
-  } 
+  } else if ( args[0] == 'load_slave' && account == 1 && command == 'reload' ) {
 
-  // it is used when looking for the last read chapter of your favorite manga
+    browser_page.send('check_fav_*' + class_fav)
 
-  else if (args[0] == 'load_slave' && account == 1 && command == 'check_last_chapter' ) {
+
+    // it is used when looking for the last read chapter of your favorite manga
+
+  } else if (args[0] == 'load_slave' && account == 1 && command == 'check_last_chapter' ) {
 
     browser_page.send('check_last_chapter_*' + chapter_class)
     command = ''
@@ -181,25 +184,28 @@ ipcMain.on('toMain', (event, ...args) => {
 
 // option page 
 ipcMain.on('toMain', (event, ...args) => {
-  if ( args[0] == 'load_option') {
+  if (args[0] == 'load_option') {
 
     load_opt()
 
-    option_page.send('option_file_*' + JSON.stringify( config ) )
-    main_page.send('option_file_*' + JSON.stringify( config ) )
+    option_page.send('option_file_*' + JSON.stringify(config))
 
-  } else if ( String(args[0]).includes('save_option_*') ) {
+  } else if (String(args[0]).includes('save_option_*')  ) {
+     
+    if ( JSON.stringify(config) != args[0].split('_*')[1] ) {
 
-    config = JSON.parse( args[0].split('_*')[1] )
-    fs.writeFileSync(path.join(__dirname, '/src/config/config.json'), args[0].split('_*')[1] )
+      config = JSON.parse(args[0].split('_*')[1])
+      fs.writeFileSync(path.join(__dirname, '/src/config/config.json'), args[0].split('_*')[1])
 
-    main_page.send('option_file_*' + JSON.stringify( config ) )
+      main_page.send('option_file_*' + JSON.stringify(config))
 
-    dialog.showMessageBox(null, {
-      type: 'info', title: app_title,
-      message: 'Preferenze salvate con successo!'
-    })
-
+    }
+      
+      dialog.showMessageBox(null, {
+        type: 'info', title: app_title,
+        message: 'Preferenze salvate con successo!'
+      })
+      
   }
 
 })
@@ -215,9 +221,13 @@ ipcMain.on('toMain', (event, ...args) => {
 
         // check your favorite manga first and then check for updates
 
-        engaged++
+        engaged = 1
         command = 'reload'
-        browser_page.send('check_fav_*' + class_fav)
+
+        // reload page before search new chapter
+
+        main_page.title('Reloading...')
+        browser_page.goto(site + 'bookmarks')
 
       } else {
 
@@ -358,7 +368,7 @@ function check_last_chapter() {
     main_page.title_default()
     work_time = 1
     working = 0
-    engaged--
+    engaged = 0
 
     new Notification({
       title: app_title,
