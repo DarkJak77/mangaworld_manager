@@ -86,8 +86,6 @@ function rebuild_data(data) {
       if (option['sfw'] == true && manga['sfw'] == 'nsfw') {
         // pass
 
-        ipcRenderer.send('toMain','test')
-
       } else  {
 
       rebuilded_data += manga_format

@@ -23,7 +23,10 @@ VARIABLES
 
 // easy edit value
 const app_title = 'MangaWorld Manager'
-const site = 'https://www.mangaworld.in/'
+const site = [
+  'https://www.mangaworld.in/',
+  'https://www.mangaworldadult.com/'
+]
 
 // this is the container class of favorite manga
 const class_fav = 'entry vertical bookmark'
@@ -31,19 +34,19 @@ const class_fav = 'entry vertical bookmark'
 // this is a manga class's 
 const chapter_class = 'chapter'
 let config = {
-  'auto_update_on_start' : false,
-  'complete_skip' : false,
-  'drop_skip' : false,
-  'stop_skip' : false,
-  'to_read_skip' : false,
-  'sfw' : true
+  'auto_update_on_start': false,
+  'complete_skip': false,
+  'drop_skip': false,
+  'stop_skip': false,
+  'to_read_skip': false,
+  'sfw': true
 }
 
 // 0 = no account / 1 = account
 let account = 0
 
 // for fullscreen and resizable
-const dev = 0;
+const dev = 0
 
 let database = {}
 let tmp = ''
@@ -51,6 +54,14 @@ let command = ''
 
 // 0 = not working / 1 = working
 let engaged = 0
+
+// 0 = base / 1 = hot
+let site_mode = 0
+let user_id = ''
+
+// 0 = to update / 1 = finish first update
+let first_update = 0
+
 let working = 0
 let work_time = 1
 
@@ -70,9 +81,9 @@ LISTENER
 
 // must 
 ipcMain.on('toMain', (event, ...args) => {
-  if ( args[0] == 'load') {
+  if (args[0] == 'load') {
     load_opt()
-    main_page.send('option_file_*' + JSON.stringify( config ) )
+    main_page.send('option_file_*' + JSON.stringify(config))
 
   } else if (args[0] == 'show_*') {
     browser_page.show()
@@ -86,12 +97,12 @@ ipcMain.on('toMain', (event, ...args) => {
     options.defaultId = 2,
 
 
-    options.buttons = ['Option', 'Developer Page', 'Exit']
+      options.buttons = ['Option', 'Developer Page', 'Exit']
     options.message =
       'OPTION: \n- Is above this text\n' +
       'DEVELOPER PAGE: \n- Click on that button to open developer page\n'
 
-    main_page.dialog(options,() => {call_option()})
+    main_page.dialog(options, () => { call_option() })
 
   }
 })
@@ -102,57 +113,78 @@ ipcMain.on('toMain', (event, ...args) => {
   // this series of functions is used to connect to 
   // an account if the cookies are invalid or not present
 
-  if (args[0] == 'load_slave' && account == 0) {
+  if (args[0] == 'load_slave') {
 
-    // if it does not detect the account, the browser screen appears 
-    // in order to connect and / or create a new account
+    if (account == 0) {
 
-    if (browser_page.check_page() == (site + 'login')) {
+      // if it does not detect the account, the browser screen appears 
+      // in order to connect and / or create a new account
 
-      dialog.showMessageBox(null, {
-        type: 'info', title: app_title,
-        message: 'Benenuto! \nCome prima cosa collega il tuo Account \nSe non ne hai uno Crealo! '
-      })
+      if (browser_page.check_page() == (site[site_mode] + 'login')) {
 
-      browser_page.show()
+        dialog.showMessageBox(null, {
+          type: 'info', title: app_title,
+          message: 'Benenuto! \nCome prima cosa collega il tuo Account \nSe non ne hai uno Crealo! '
+        })
 
-    } else if (browser_page.check_page().includes('bookmarks')) {
+        browser_page.show()
 
-      // if it detects the account, it looks for your favorite manga
+      } else if (browser_page.check_page().includes('bookmarks')) {
 
-      account = 1
-      browser_page.saveCookie()
+        // if it detects the account, it looks for your favorite manga
 
-      browser_page.hide()
-      browser_page.send('check_fav_*' + class_fav)
+        if (site_mode == 0) {
 
+          user_id = browser_page.check_page().split('bookmarks/')[1]
 
-    } else if (browser_page.check_page() == (site + 'register')) {
+          browser_page.send('check_fav_*' + class_fav)
 
-      // the program gives the possibility to create an account
+        } else if ( site_mode == 1 ){
 
-    } else {
+          account = 1
 
-      // if it does not detect the account at each refresh it tries to connect to 
-      // the favorites page in order to check if the account has been entered
+          browser_page.saveCookie()
 
-      browser_page.goto(site + 'bookmarks')
+          browser_page.send('check_fav_*' + class_fav)
 
+          browser_page.hide()
+
+        }
+
+      } else if (browser_page.check_page() == (site[site_mode] + 'register')) {
+
+        // the program gives the possibility to create an account
+
+      } else {
+
+        // if it does not detect the account at each refresh it tries to connect to 
+        // the favorites page in order to check if the account has been entered
+
+        browser_page.goto(site[site_mode] + 'bookmarks/' + user_id)
+
+      }
+
+    } else if (account == 1) {
+
+      if (command == 'reload') {
+
+        browser_page.send('check_fav_*' + class_fav)
+
+        // it is used when looking for the last read chapter of your favorite manga
+
+      } else if (command == 'check_last_chapter') {
+
+        browser_page.send('check_last_chapter_*' + chapter_class)
+        command = ''
+
+      }
     }
 
-  } else if ( args[0] == 'load_slave' && account == 1 && command == 'reload' ) {
-
-    browser_page.send('check_fav_*' + class_fav)
-
-
-    // it is used when looking for the last read chapter of your favorite manga
-
-  } else if (args[0] == 'load_slave' && account == 1 && command == 'check_last_chapter' ) {
-
-    browser_page.send('check_last_chapter_*' + chapter_class)
-    command = ''
-
   }
+
+
+
+
 })
 
 // render page to main
@@ -163,18 +195,55 @@ ipcMain.on('toMain', (event, ...args) => {
 
   if (String(args[0]).includes('dict_*')) {
 
-    database = JSON.parse( args[0].split('_*')[1] )
+    if (site_mode == 1) {
 
-    main_page.send(args[0])
+      let db = []
 
-    if ( config.auto_update_on_start == true ) {
-      update_manga()
+      database.map(x => db.push(x))
+      JSON.parse(args[0].split('_*')[1]).map(x => db.push(x))
 
-    }
+      // CREDIT https://stackoverflow.com/questions/35576041/sort-json-by-value
+      database = db.sort(function (a, b) {
+        return a.title.localeCompare(b.title);
+      });
 
-    if ( command == 'reload') {
+      // CREDIT UP
 
-      update_manga()
+      if (command != 'reload') {
+
+        main_page.send('dict_*' + JSON.stringify(database))
+
+      } else if (command == 'reload' && site_mode == 1) {
+        site_mode = 0
+        update_manga()
+
+      }
+
+      if (config.auto_update_on_start == true && first_update == 0) {
+        first_update = 1
+        
+        update_manga()
+
+      }
+
+      
+
+
+    } else if (site_mode == 0 && account == 0) {
+
+      database = JSON.parse(args[0].split('_*')[1])
+
+      site_mode = 1
+
+      browser_page.goto(site[site_mode] + 'bookmarks/' + user_id)
+
+    } else if ( site_mode == 0 && account == 1 && command == 'reload') {
+
+      database = JSON.parse(args[0].split('_*')[1])
+
+      site_mode = 1
+
+      browser_page.goto(site[site_mode] + 'bookmarks/' + user_id)
 
     }
 
@@ -190,9 +259,9 @@ ipcMain.on('toMain', (event, ...args) => {
 
     option_page.send('option_file_*' + JSON.stringify(config))
 
-  } else if (String(args[0]).includes('save_option_*')  ) {
-     
-    if ( JSON.stringify(config) != args[0].split('_*')[1] ) {
+  } else if (String(args[0]).includes('save_option_*')) {
+
+    if (JSON.stringify(config) != args[0].split('_*')[1]) {
 
       config = JSON.parse(args[0].split('_*')[1])
       fs.writeFileSync(path.join(__dirname, '/src/config/config.json'), args[0].split('_*')[1])
@@ -200,12 +269,12 @@ ipcMain.on('toMain', (event, ...args) => {
       main_page.send('option_file_*' + JSON.stringify(config))
 
     }
-      
-      dialog.showMessageBox(null, {
-        type: 'info', title: app_title,
-        message: 'Preferenze salvate con successo!'
-      })
-      
+
+    dialog.showMessageBox(null, {
+      type: 'info', title: app_title,
+      message: 'Preferenze salvate con successo!'
+    })
+
   }
 
 })
@@ -215,19 +284,21 @@ ipcMain.on('toMain', (event, ...args) => {
 
   if ((args[0]) == 'update_*') {
 
-    if ( engaged == 0 ) {
+    if (engaged == 0) {
 
-      if ( account == 1) {
+      if (account == 1) {
 
         // check your favorite manga first and then check for updates
 
         engaged = 1
         command = 'reload'
+        site_mode = 0
+        database = {}
 
         // reload page before search new chapter
 
         main_page.title('Reloading...')
-        browser_page.goto(site + 'bookmarks')
+        browser_page.goto(site[site_mode] + 'bookmarks/' + user_id)
 
       } else {
 
@@ -247,9 +318,9 @@ ipcMain.on('toMain', (event, ...args) => {
 
     }
 
-    
 
-  } else if ( String(args[0]).includes('check_last_chapter_result_*') ) {
+
+  } else if (String(args[0]).includes('check_last_chapter_result_*')) {
 
     check_last_chapter_result(args[0].split('_*')[1])
 
@@ -259,13 +330,17 @@ ipcMain.on('toMain', (event, ...args) => {
 
 // debug show message
 ipcMain.on('toMain', (event, ...args) => {
-  
+
+  /*
   if ( String( args[0] ).includes('db_*')  ) {
 
-     console.log(args[0]) 
+    //console.log(args[0]) 
 
   }
-  
+  */
+
+  //console.log(args[0])
+
 })
 
 
@@ -281,13 +356,13 @@ function load_opt() {
 
   // If it is not present, a standard is created
 
-  if (! (fs.existsSync(path.join(__dirname, '/src/config/config.json'))) ) {
+  if (!(fs.existsSync(path.join(__dirname, '/src/config/config.json')))) {
 
-    fs.writeFileSync(path.join(__dirname, '/src/config/config.json'),JSON.stringify(config))
+    fs.writeFileSync(path.join(__dirname, '/src/config/config.json'), JSON.stringify(config))
 
   } else {
 
-    config = JSON.parse( fs.readFileSync(path.join(__dirname, '/src/config/config.json')) )
+    config = JSON.parse(fs.readFileSync(path.join(__dirname, '/src/config/config.json')))
 
   }
 
@@ -306,49 +381,50 @@ function call_option() {
 function update_manga() {
   tmp = []
 
-    database.map(
+  database.map(
 
-      (manga) => {
+    (manga) => {
 
-        if (config.complete_skip == true && manga.status == 'complete') {
-          //
+      if (config.complete_skip == true && manga.status == 'complete') {
+        //
 
-        } else if (config.drop_skip == true && manga.status == 'drop') {
-          //
+      } else if (config.drop_skip == true && manga.status == 'drop') {
+        //
 
-        } else if (config.stop_skip == true && manga.status == 'stop') {
-          //
+      } else if (config.stop_skip == true && manga.status == 'stop') {
+        //
 
-        } else if (config.complete_skip == true && manga.status == 'complete') {
-          //
+      } else if (config.complete_skip == true && manga.status == 'complete') {
+        //
 
-        } else if (config.to_read_skip == true && manga.status == 'to_read') {
-          //
+      } else if (config.to_read_skip == true && manga.status == 'to_read') {
+        //
 
-        } else {
-          tmp.push(manga)
-
-        }
+      } else {
+        tmp.push(manga)
 
       }
 
+    }
 
-    )
-    
-    command = ''
 
-    // these variables are used for the status bar ( does not work in linux )
+  )
 
-    working = tmp.length
-    main_page.progress(work_time,working)
-    main_page.title('Updating....   '+work_time+'/'+working)
+  command = ''
 
-    new Notification({
-      title: app_title,
-      body: 'Start Scan for Updates'
-    }).show();
+  // these variables are used for the status bar ( does not work in linux )
 
-    check_last_chapter()
+  working = tmp.length
+  main_page.progress(work_time, working)
+  main_page.title('Updating....   ' + work_time + '/' + working)
+
+
+  new Notification({
+    title: app_title,
+    body: 'Start Scan for Updates'
+  }).show();
+
+  check_last_chapter()
 
 }
 
@@ -357,10 +433,10 @@ function update_manga() {
 
 function check_last_chapter() {
 
-  if ( tmp.length != 0 ) {
+  if (tmp.length != 0) {
 
     command = 'check_last_chapter'
-    browser_page.goto( tmp[0].link )
+    browser_page.goto(tmp[0].link)
 
   } else {
     main_page.send('dict_*' + JSON.stringify(database))
@@ -388,24 +464,24 @@ function check_last_chapter() {
 function check_last_chapter_result(found_value) {
   let to_find = tmp[0].title
 
-    database.map(
-      (manga,index) => {
+  database.map(
+    (manga, index) => {
 
-        if(manga.title == to_find) {
-          database[index].last_chapter = found_value
-
-        }
+      if (manga.title == to_find) {
+        database[index].last_chapter = found_value
 
       }
 
-    )
+    }
 
-    tmp.shift()
-    work_time++
-    main_page.progress(work_time,working)
-    main_page.title('Updating....   '+work_time+'/'+working)
+  )
 
-    check_last_chapter()
+  tmp.shift()
+  work_time++
+  main_page.progress(work_time, working)
+  main_page.title('Updating....   ' + work_time + '/' + working)
+
+  check_last_chapter()
 
 }
 
@@ -429,9 +505,9 @@ class createWindow {
         resizable: true,
         maximizable: true,
 
-        
+
         icon: path.join(__dirname, '/src/ico/manga.ico'),
-        
+
 
         webPreferences: {
           preload: path.join(__dirname, '/src/js/preload/preload.js')
@@ -480,12 +556,12 @@ class createWindow {
         }
 
       })
-      
+
       this.win.setPosition(500, 0)
 
       if (dev == 1) {
         this.win.resizable = true,
-        this.win.fullscreenable = true
+          this.win.fullscreenable = true
         //this.win.webContents.openDevTools();
       }
 
@@ -500,13 +576,13 @@ class createWindow {
 
       this.win.on('close', (event) => {
 
-      this.confirmAndQuit(event)
+        this.confirmAndQuit(event)
 
-    })
+      })
 
     }
 
-    
+
 
   }
 
@@ -546,7 +622,7 @@ class createWindow {
           }
         })
     }
-   // }
+    // }
 
 
   }
@@ -561,29 +637,29 @@ class createWindow {
     dialog.showMessageBox(this.win, option)
       .then(result => {
         if (result.response === 0) {
-          if ( fn_1 != undefined ) {
+          if (fn_1 != undefined) {
             fn_1()
 
           } else {
             //
 
-          } 
+          }
 
         } else if (result.response === 1) {
           // Usually Developer Page Button
 
-          if ( fn_2 != undefined ) {
+          if (fn_2 != undefined) {
             fn_2()
 
           } else {
             shell.openExternal('https://github.com/DarkJak77/')
 
-          } 
+          }
 
         } else if (result.response === 2) {
           // Usually Exit Button
 
-          if ( fn_3 != undefined ) {
+          if (fn_3 != undefined) {
             fn_3()
 
           } else {
@@ -658,6 +734,7 @@ class createWindow {
     }
   }
 
+  /*
   saveCookie() {
     this.url = this.check_page()
     session.defaultSession.cookies.get({})
@@ -670,6 +747,43 @@ class createWindow {
             }
           )
           fs.writeFileSync(path.join(__dirname, '/src/cookies/cookies.json'), JSON.stringify(this.to_insert, null, 2));
+        }
+      }).catch((error) => {
+        console.log(error)
+      })
+  }
+  */
+
+  // EDIT VERSION ONLY FOR MANGAWORLD
+  saveCookie() {
+    this.normal = ''
+    this.hard = ''
+
+    session.defaultSession.cookies.get({ url: site[0] })
+      .then((cookies) => {
+        if (cookies != []) {
+          this.normal = cookies.map(
+            (value) => {
+              value.url = site[0]
+              return value
+            }
+          )
+        }
+      }).catch((error) => {
+        console.log(error)
+      })
+
+    session.defaultSession.cookies.get({ url: site[1] })
+      .then((cookies) => {
+        if (cookies != []) {
+          this.hard = cookies.map(
+            (value) => {
+              value.url = site[1]
+              return value
+            }
+          )
+
+          fs.writeFileSync(path.join(__dirname, '/src/cookies/cookies.json'), JSON.stringify(this.normal.concat(this.hard), null, 2));
         }
       }).catch((error) => {
         console.log(error)
@@ -720,7 +834,8 @@ app.whenReady().then(() => {
 
 
   browser_page.load_coockie()
-  browser_page.goto(site + 'bookmarks')
+  browser_page.goto(site[site_mode] + 'bookmarks/' + user_id)
+
 
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) {
@@ -731,7 +846,7 @@ app.whenReady().then(() => {
 
 
       browser_page.load_coockie()
-      browser_page.goto(site + 'bookmarks')
+      browser_page.goto(site[site_mode] + 'bookmarks/' + user_id)
 
     }
   })
