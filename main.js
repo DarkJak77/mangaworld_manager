@@ -36,9 +36,13 @@ const chapter_class = 'chapter'
 let config = {
   'auto_update_on_start': false,
   'complete_skip': false,
+  'complete_not_show': false,
   'drop_skip': false,
+  'drop_not_show': false,
   'stop_skip': false,
+  'stop_not_show': false,
   'to_read_skip': false,
+  'to_read_not_show': false,
   'sfw': true
 }
 
@@ -183,8 +187,6 @@ ipcMain.on('toMain', (event, ...args) => {
   }
 
 
-
-
 })
 
 // render page to main
@@ -197,45 +199,24 @@ ipcMain.on('toMain', (event, ...args) => {
 
     if (site_mode == 1) {
 
-      let db = []
-
-      database.map(x => db.push(x))
-      JSON.parse(args[0].split('_*')[1]).map(x => db.push(x))
-
-      // CREDIT https://stackoverflow.com/questions/35576041/sort-json-by-value
-      database = db.sort(function (a, b) {
-        return a.title.localeCompare(b.title);
-      });
-
-      // CREDIT UP
-
-      if (command != 'reload') {
-
-        main_page.send('dict_*' + JSON.stringify(database))
-
-      } else if (command == 'reload' && site_mode == 1) {
-        site_mode = 0
-        update_manga()
-
-      }
-
-      if (config.auto_update_on_start == true && first_update == 0) {
-        first_update = 1
-        
-        update_manga()
-
-      }
-
-      
-
-
+      send_manga_list(args)
+    
     } else if (site_mode == 0 && account == 0) {
 
       database = JSON.parse(args[0].split('_*')[1])
 
       site_mode = 1
 
-      browser_page.goto(site[site_mode] + 'bookmarks/' + user_id)
+      if ( config['sfw'] == true ) {
+
+        send_manga_list(args = null)
+
+      } else {
+
+        browser_page.goto(site[site_mode] + 'bookmarks/' + user_id)
+
+      }
+      
 
     } else if ( site_mode == 0 && account == 1 && command == 'reload') {
 
@@ -243,7 +224,15 @@ ipcMain.on('toMain', (event, ...args) => {
 
       site_mode = 1
 
-      browser_page.goto(site[site_mode] + 'bookmarks/' + user_id)
+      if ( config['sfw'] == true ) {
+
+        send_manga_list(args = null)
+
+      } else {
+
+        browser_page.goto(site[site_mode] + 'bookmarks/' + user_id)
+
+      }
 
     }
 
@@ -486,6 +475,59 @@ function check_last_chapter_result(found_value) {
 }
 
 
+// this function is used when the final dict comes from 
+// the slave, is rendered or the update function is executed 
+function send_manga_list(args) {
+
+  // when use SFW function this pass is skipped, so to set up 
+  // the account we propose it again here
+  if ( account == 0 ) {
+
+    account = 1
+
+    browser_page.saveCookie()
+
+    browser_page.hide()
+
+  }
+
+  let db = []
+
+      database.map(x => db.push(x))
+
+      if ( args != null) {
+
+        JSON.parse(args[0].split('_*')[1]).map(x => db.push(x))
+
+      }
+      
+
+      // CREDIT https://stackoverflow.com/questions/35576041/sort-json-by-value
+      database = db.sort(function (a, b) {
+        return a.title.localeCompare(b.title);
+      });
+
+      // CREDIT UP
+
+      if (command != 'reload') {
+
+        main_page.send('dict_*' + JSON.stringify(database))
+
+      } else if (command == 'reload' && site_mode == 1) {
+        site_mode = 0
+        update_manga()
+
+      }
+
+      if (config.auto_update_on_start == true && first_update == 0) {
+        first_update = 1
+        
+        update_manga()
+
+      }
+
+}
+
 /*
 CLASS
 */
@@ -545,7 +587,7 @@ class createWindow {
       this.win = new BrowserWindow({
         title: app_title + '- Option Page',
         width: 400,
-        height: 350,
+        height: 510,
         maximizable: false,
         show: true,
 

@@ -62,7 +62,6 @@ contextBridge.exposeInMainWorld(
     rebuild_data( to_work )
     
     }
-
     
 
   }
@@ -86,7 +85,19 @@ function rebuild_data(data) {
       if (option['sfw'] == true && manga['sfw'] == 'nsfw') {
         // pass
 
-      } else  {
+      } else if (option['complete_not_show'] == true && manga['status'] == 'complete') {
+        // pass
+
+      } else if (option['drop_not_show'] == true && manga['status'] == 'drop') {
+        // pass
+
+      } else if (option['stop_not_show'] == true && manga['status'] == 'stop') {
+        // pass
+
+      } else if (option['to_read_not_show'] == true && manga['status'] == 'to_read') {
+        // pass
+
+      } else {
 
       rebuilded_data += manga_format
       .replace( '{title}' , manga.title )
@@ -97,10 +108,7 @@ function rebuild_data(data) {
       .replace( '{status}' , manga.status )
       .replace( '{last_chapter}', manga.last_chapter )
 
-      }
-
-
-      
+      } 
 
     }
 
