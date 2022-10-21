@@ -1,7 +1,7 @@
 const { app, BrowserWindow, ipcMain, dialog, session, Notification, shell } = require('electron')
 const path = require('path')
 const fs = require('fs')
-
+const fetch = require('node-fetch')
 
 
 
@@ -9,11 +9,9 @@ const fs = require('fs')
 BROWSER VARIABLES
 */
 
-
 let main_page = ''
 let browser_page = ''
 let option_page = ''
-
 
 
 
@@ -24,12 +22,11 @@ VARIABLES
 // easy edit value
 const app_title = 'MangaWorld Manager'
 
-//let site = JSON.parse(fs.readFileSync()))
+// this is link for my github to get mangaworld site link
+let site_url = 'https://raw.githubusercontent.com/DarkJak77/mangaworld_manager/40319539d5aded3699ad4688d45f270d8197ca76/site_link.json'
 
-const si = [
-  'https://www.mangaworld.in/',
-  'https://www.mangaworldadult.com/'
-]
+// 0 == normal / 1 == adult
+let site = []
 
 // this is the container class of favorite manga
 const class_fav = 'entry vertical bookmark'
@@ -78,7 +75,6 @@ let options = {
   title: app_title,
   message: '',
 };
-
 
 
 
@@ -146,7 +142,7 @@ ipcMain.on('toMain', (event, ...args) => {
 
           browser_page.send('check_fav_*' + class_fav)
 
-        } else if ( site_mode == 1 ){
+        } else if (site_mode == 1) {
 
           account = 1
 
@@ -203,14 +199,14 @@ ipcMain.on('toMain', (event, ...args) => {
     if (site_mode == 1) {
 
       send_manga_list(args)
-    
+
     } else if (site_mode == 0 && account == 0) {
 
       database = JSON.parse(args[0].split('_*')[1])
 
       site_mode = 1
 
-      if ( config['sfw'] == true ) {
+      if (config['sfw'] == true) {
 
         send_manga_list(args = null)
 
@@ -219,15 +215,15 @@ ipcMain.on('toMain', (event, ...args) => {
         browser_page.goto(site[site_mode] + 'bookmarks/' + user_id)
 
       }
-      
 
-    } else if ( site_mode == 0 && account == 1 && command == 'reload') {
+
+    } else if (site_mode == 0 && account == 1 && command == 'reload') {
 
       database = JSON.parse(args[0].split('_*')[1])
 
       site_mode = 1
 
-      if ( config['sfw'] == true ) {
+      if (config['sfw'] == true) {
 
         send_manga_list(args = null)
 
@@ -334,7 +330,6 @@ ipcMain.on('toMain', (event, ...args) => {
   //console.log(args[0])
 
 })
-
 
 
 
@@ -484,7 +479,7 @@ function send_manga_list(args) {
 
   // when use SFW function this pass is skipped, so to set up 
   // the account we propose it again here
-  if ( account == 0 ) {
+  if (account == 0) {
 
     account = 1
 
@@ -496,40 +491,53 @@ function send_manga_list(args) {
 
   let db = []
 
-      database.map(x => db.push(x))
+  database.map(x => db.push(x))
 
-      if ( args != null) {
+  if (args != null) {
 
-        JSON.parse(args[0].split('_*')[1]).map(x => db.push(x))
+    JSON.parse(args[0].split('_*')[1]).map(x => db.push(x))
 
-      }
-      
+  }
 
-      // CREDIT https://stackoverflow.com/questions/35576041/sort-json-by-value
-      database = db.sort(function (a, b) {
-        return a.title.localeCompare(b.title);
-      });
 
-      // CREDIT UP
+  // CREDIT https://stackoverflow.com/questions/35576041/sort-json-by-value
+  database = db.sort(function (a, b) {
+    return a.title.localeCompare(b.title);
+  });
 
-      if (command != 'reload') {
+  // CREDIT UP
 
-        main_page.send('dict_*' + JSON.stringify(database))
+  if (command != 'reload') {
 
-      } else if (command == 'reload' && site_mode == 1) {
-        site_mode = 0
-        update_manga()
+    main_page.send('dict_*' + JSON.stringify(database))
 
-      }
+  } else if (command == 'reload' && site_mode == 1) {
+    site_mode = 0
+    update_manga()
 
-      if (config.auto_update_on_start == true && first_update == 0) {
-        first_update = 1
-        
-        update_manga()
+  }
 
-      }
+  if (config.auto_update_on_start == true && first_update == 0) {
+    first_update = 1
+
+    update_manga()
+
+  }
 
 }
+
+// this funciton get the mangaworld link from my github
+async function get_link() {
+
+  const response = await fetch(site_url);
+  const data = await response.json()
+
+  site[0] = data['normal']
+  site[1] = data['adult']
+
+}
+
+
 
 /*
 CLASS
@@ -866,12 +874,12 @@ class createWindow {
 
 
 
-
 /*
 TO START
 */
 
-app.whenReady().then(() => {
+app.whenReady().then(async () => {
+  await get_link()
   main_page = new createWindow('master')
   browser_page = new createWindow('slave')
   main_page
@@ -882,8 +890,9 @@ app.whenReady().then(() => {
   browser_page.goto(site[site_mode] + 'bookmarks/' + user_id)
 
 
-  app.on('activate', () => {
+  app.on('activate', async () => {
     if (BrowserWindow.getAllWindows().length === 0) {
+      await get_link()
       main_page = new createWindow('master')
       browser_page = new createWindow('slave')
       main_page

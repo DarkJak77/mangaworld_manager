@@ -29,6 +29,7 @@
     "electron-json-storage": "^4.4.0",
     "electron-osx-prompt": "^1.4.1",
     "electron-squirrel-startup": "^1.0.0",
+    "node-fetch": "^2.6.7",
     "puppeteer": "^13.7.0",
     "rpmbuild": "^0.0.23",
     "shell": "^0.9.4",
