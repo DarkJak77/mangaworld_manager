@@ -23,7 +23,10 @@ VARIABLES
 
 // easy edit value
 const app_title = 'MangaWorld Manager'
-const site = [
+
+//let site = JSON.parse(fs.readFileSync()))
+
+const si = [
   'https://www.mangaworld.in/',
   'https://www.mangaworldadult.com/'
 ]
